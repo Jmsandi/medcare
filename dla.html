@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>District Health Admin - Data Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f6fa;
+            color: #2d3436;
+        }
+
+        .admin-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+        }
+
+        .navbar a:hover {
+            background-color: #34495e;
+        }
+
+        .navbar a.active {
+            background-color: #3498db;
+        }
+
+        .page {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page h1 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .action-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .data-table th {
+            background-color: #f8f9fa;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .status-operational {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .status-warning {
+            background-color: #f1c40f;
+            color: black;
+        }
+
+        .status-critical {
+            background-color: #e74c3c;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .navbar ul {
+                flex-direction: column;
+            }
+            
+            .action-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <ul>
+            <li><a href="#" onclick="showPage('health-metrics')" class="active">Health Metrics</a></li>
+            <li><a href="#" onclick="showPage('resources')">Resources</a></li>
+            <li><a href="#" onclick="showPage('staff')">Staff</a></li>
+            <li><a href="#" onclick="showPage('facilities')">Facilities</a></li>
+            <li><a href="#" onclick="showPage('emergency')">Emergency Response</a></li>
+        </ul>
+    </nav>
+
+    <div class="admin-container">
+        <!-- Health Metrics Page -->
+        <div id="health-metrics" class="page active">
+            <div class="action-bar">
+                <h1>Health Metrics Management</h1>
+                <button class="btn btn-primary" onclick="showModal('healthMetricsModal')">Add New Record</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Disease Type</th>
+                        <th>Cases</th>
+                        <th>Vaccination Rate</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="healthMetricsTable">
+                    <!-- Data will be populated via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Resources Page -->
+        <div id="resources" class="page">
+            <div class="action-bar">
+                <h1>Resource Management</h1>
+                <button class="btn btn-primary" onclick="showModal('resourceModal')">Add Resource</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Resource Name</th>
+                        <th>Current Stock</th>
+                        <th>Allocated</th>
+                        <th>Required</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="resourcesTable">
+                    <!-- Data will be populated via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Staff Management Page -->
+        <div id="staff" class="page">
+            <div class="action-bar">
+                <h1>Staff Management</h1>
+                <button class="btn btn-primary" onclick="showModal('staffModal')">Add Staff</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Facility</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="staffTable">
+                    <!-- Data will be populated via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Facilities Page -->
+        <div id="facilities" class="page">
+            <div class="action-bar">
+                <h1>Facility Management</h1>
+                <button class="btn btn-primary" onclick="showModal('facilityModal')">Add Facility</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Type</th>
+                        <th>Capacity</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="facilitiesTable">
+                    <!-- Data will be populated via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Emergency Response Page -->
+        <div id="emergency" class="page">
+            <div class="action-bar">
+                <h1>Emergency Response Management</h1>
+                <button class="btn btn-primary" onclick="showModal('emergencyModal')">Add Emergency Plan</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Zone</th>
+                        <th>Type</th>
+                        <th>Resources</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="emergencyTable">
+                    <!-- Data will be populated via JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <!-- Health Metrics Modal -->
+    <div id="healthMetricsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('healthMetricsModal')">&times;</span>
+            <h2>Add/Edit Health Metric</h2>
+            <form id="healthMetricsForm" onsubmit="handleFormSubmit(event, 'healthMetrics')">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" name="date" required>
+                </div>
+                <div class="form-group">
+                    <label>Disease Type</label>
+                    <input type="text" name="diseaseType" required>
+                </div>
+                <div class="form-group">
+                    <label>Cases</label>
+                    <input type="number" name="cases" required>
+                </div>
+                <div class="form-group">
+                    <label>Vaccination Rate (%)</label>
+                    <input type="number" name="vaccinationRate" min="0" max="100" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Resource Modal -->
+    <div id="resourceModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('resourceModal')">&times;</span>
+            <h2>Add/Edit Resource</h2>
+            <form id="resourceForm" onsubmit="handleFormSubmit(event, 'resource')">
+                <div class="form-group">
+                    <label>Resource Name</label>
+                    <input type="text" name="resourceName" required>
+                </div>
+                <div class="form-group">
+                    <label>Current Stock</label>
+                    <input type="number" name="currentStock" required>
+                </div>
+                <div class="form-group">
+                    <label>Allocated</label>
+                    <input type="number" name="allocated" required>
+                </div>
+                <div class="form-group">
+                    <label>Required</label>
+                    <input type="number" name="required" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Update navigation
+            document.querySelectorAll('.navbar a').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Modal Management
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Sample Data Management
+        let healthMetricsData = [
+            { date: '2024-12-01', diseaseType: 'COVID-19', cases: 45, vaccinationRate: 87 },
+            { date: '2024-12-01', diseaseType: 'Influenza', cases: 23, vaccinationRate: 65 }
+        ];
+
+        let resourcesData = [
+            { name: 'Ventilators', currentStock: 50, allocated: 35, required: 60 },
+            { name: 'ICU Beds', currentStock: 100, allocated: 82, required: 120 }
+        ];
+
+        // Form Submission Handler
+        function handleFormSubmit(event, formType) {
+            event.preventDefault();
+            try {
+                const formData = new FormData(event.target);
+                const data = Object.fromEntries(formData.entries());
+
+                switch(formType) {
+                    case 'healthMetrics':
+                        healthMetricsData.push(data);
+                        updateHealthMetricsTable();
+                        break;
+                    case 'resource':
+                        resourcesData.push(data);
+                        updateResourcesTable();
+                        break;
+                    default:
+                        console.error('Unknown form type:', formType);
+                        return;
+                }
+
+                closeModal(`${formType}Modal`);
+                event.target.reset();
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                alert('An error occurred while saving the data. Please try again.');
+            }
+        }
+
+        // Table Updates
+        function updateHealthMetricsTable() {
+            const table = document.getElementById('healthMetricsTable');
+            table.innerHTML = healthMetricsData.map(item => `
+                <tr>
+                    <td>${item.date}</td>
+                    <td>${item.diseaseType}</td>
+                    <td>${item.cases}</td>
+                    <td>${item.vaccinationRate}%</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="editHealthMetric('${item.date}')">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteHealthMetric('${item.date}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateResourcesTable() {
+            const table = document.getElementById('resourcesTable');
+            table.innerHTML = resourcesData.map(item => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.currentStock}</td>
+                    <td>${item.allocated}</td>
+                    <td>${item.required}</td>
+                    <td>
+                        <button class="btn btn-primary" onclick="editResource('${item.name}')">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteResource('${item.name}')">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Initialize tables
+        updateHealthMetricsTable();
+        updateResourcesTable();
+
+        // Delete Functions
+        function deleteHealthMetric(date) {
+            healthMetricsData = healthMetricsData.filter(item => item.date !== date);
+            updateHealthMetricsTable();
+        }
+
+        function deleteResource(name) {
+            resourcesData = resourcesData.filter(item => item.name !== name);
+            updateResourcesTable();
+        }
+
+        // Edit Functions
+        function editHealthMetric(date) {
+            const item = healthMetricsData.find(item => item.date === date);
+            if (item) {
+                const form = document.getElementById('healthMetricsForm');
+                form.date.value = item.date;
+                form.diseaseType.value = item.diseaseType;
+                form.cases.value = item.cases;
+                form.vaccinationRate.value = item.vaccinationRate;
+                
+                // Remove existing item before edit
+                healthMetricsData = healthMetricsData.filter(i => i.date !== date);
+                showModal('healthMetricsModal');
+            }
+        }
+
+        function editResource(name) {
+            const item = resourcesData.find(item => item.name === name);
+            if (item) {
+                const form = document.getElementById('resourceForm');
+                form.resourceName.value = item.name;
+                form.currentStock.value = item.currentStock;
+                form.allocated.value = item.allocated;
+                form.required.value = item.required;
+                
+                // Remove existing item before edit
+                resourcesData = resourcesData.filter(i => i.name !== name);
+                showModal('resourceModal');
+            }
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modals = document.getElementsByClassName('modal');
+            Array.from(modals).forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

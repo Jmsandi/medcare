@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Care Plan Management System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .patient-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .info-item {
+            margin-bottom: 10px;
+        }
+
+        .info-label {
+            font-weight: bold;
+            color: #666;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #ddd;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1rem;
+        }
+
+        .tab.active {
+            border-bottom: 2px solid #2c3e50;
+            color: #2c3e50;
+            margin-bottom: -2px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .medication-list, .appointment-list, .notes-list {
+            list-style: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .medication-item, .appointment-item, .note-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .note-item {
+            background: #f9f9f9;
+            margin-bottom: 8px;
+            border-radius: 4px;
+        }
+
+        .note-timestamp {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .progress-chart {
+            width: 100%;
+            height: 200px;
+            background: #fff;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+
+        .notes-section textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .btn {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background: #34495e;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Care Plan Management System</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-section">
+            <h2>Patient Lookup</h2>
+            <div class="search-box">
+                <input type="text" id="patient-search" placeholder="Enter Patient ID (e.g., P12345)">
+                <button class="btn" onclick="searchPatient()">Search</button>
+            </div>
+            <div id="search-error" class="error-message">Patient not found. Please check the ID and try again.</div>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h2>Patient Information</h2>
+                <div class="patient-info">
+                    <div class="info-item">
+                        <div class="info-label">Name:</div>
+                        <div id="patient-name">sam king</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">ID:</div>
+                        <div id="patient-id">P12345</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Age:</div>
+                        <div id="patient-age">45</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Primary Condition:</div>
+                        <div id="patient-condition">Hypertension</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Treatment Plans</h2>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('current-plan')">Current</button>
+                    <button class="tab" onclick="switchTab('history-plan')">History</button>
+                </div>
+                <div id="current-plan" class="tab-content active">
+                    <div class="info-item">
+                        <div class="info-label">Current Goal:</div>
+                        <div>Blood pressure management</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Strategy:</div>
+                        <div>Medication and lifestyle changes</div>
+                    </div>
+                </div>
+                <div id="history-plan" class="tab-content">
+                    <div class="info-item">
+                        <div class="info-label">Previous Plans:</div>
+                        <ul class="medication-list">
+                            <li class="medication-item">Initial assessment (Completed)</li>
+                            <li class="medication-item">Dietary adjustment (Completed)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Medication Schedule</h2>
+                <ul class="medication-list" id="medication-list">
+                    <li class="medication-item">
+                        Lisinopril 10mg - Daily at 8:00 AM
+                    </li>
+                    <li class="medication-item">
+                        Amlodipine 5mg - Daily at 8:00 PM
+                    </li>
+                </ul>
+                <button class="btn" onclick="addMedication()">Add Medication</button>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="card">
+                <h2>Progress Tracking</h2>
+                <div class="progress-chart" id="progress-chart"></div>
+            </div>
+
+            <div class="card">
+                <h2>Test Results</h2>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('recent-tests')">Recent</button>
+                    <button class="tab" onclick="switchTab('all-tests')">All Tests</button>
+                </div>
+                <div id="recent-tests" class="tab-content active">
+                    <ul class="medication-list">
+                        <li class="medication-item">Blood Pressure: 130/85 (Today)</li>
+                        <li class="medication-item">Blood Sugar: 95 mg/dL (Yesterday)</li>
+                    </ul>
+                </div>
+                <div id="all-tests" class="tab-content">
+                    <ul class="medication-list">
+                        <li class="medication-item">Complete history will be shown here</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Notes & Observations</h2>
+                <div class="notes-section">
+                    <textarea id="notes" placeholder="Add your observations here..."></textarea>
+                    <button class="btn" onclick="saveNotes()">Save Notes</button>
+                    <div class="notes-list" id="saved-notes">
+                        <!-- Saved notes will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock patient database
+        const patientDatabase = {
+            'P12345': {
+                name: 'John Doe',
+                age: 45,
+                condition: 'Hypertension'
+            },
+            'P12346': {
+                name: 'Jane Smith',
+                age: 52,
+                condition: 'Diabetes Type 2'
+            }
+        };
+
+        // Patient search functionality
+        function searchPatient() {
+            const searchId = document.getElementById('patient-search').value;
+            const errorMessage = document.getElementById('search-error');
+            
+            if (patientDatabase[searchId]) {
+                const patient = patientDatabase[searchId];
+                document.getElementById('patient-name').textContent = patient.name;
+                document.getElementById('patient-id').textContent = searchId;
+                document.getElementById('patient-age').textContent = patient.age;
+                document.getElementById('patient-condition').textContent = patient.condition;
+                errorMessage.style.display = 'none';
+            } else {
+                errorMessage.style.display = 'block';
+            }
+        }
+
+        // Tab switching functionality
+        function switchTab(tabId) {
+            const tabContainer = document.querySelector(`#${tabId}`).parentElement;
+            const tabs = tabContainer.querySelectorAll('.tab');
+            const contents = tabContainer.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            const selectedTab = tabContainer.querySelector(`button[onclick="switchTab('${tabId}')"]`);
+            const selectedContent = document.getElementById(tabId);
+            
+            selectedTab.classList.add('active');
+            selectedContent.classList.add('active');
+        }
+
+        // Add medication functionality
+        function addMedication() {
+            const medicationList = document.getElementById('medication-list');
+            const newMedication = prompt('Enter new medication details:');
+            
+            if (newMedication) {
+                const li = document.createElement('li');
+                li.className = 'medication-item';
+                li.textContent = newMedication;
+                medicationList.appendChild(li);
+            }
+        }
+
+        // Save notes functionality
+        function saveNotes() {
+            const notesText = document.getElementById('notes').value;
+            const savedNotes = document.getElementById('saved-notes');
+            
+            if (notesText.trim()) {
+                const noteItem = document.createElement('div');
+                noteItem.className = 'note-item';
+                
+                const noteContent = document.createElement('div');
+                noteContent.textContent = notesText;
+                
+                const timestamp = document.createElement('div');
+                timestamp.className = 'note-timestamp';
+                timestamp.textContent = new Date().toLocaleString();
+                
+                noteItem.appendChild(noteContent);
+                noteItem.appendChild(timestamp);
+                savedNotes.insertBefore(noteItem, savedNotes.firstChild);
+                
+                // Clear the input
+                document.getElementById('notes').value = '';
+            }
+        }
+
+        // Simple progress chart visualization
+        function initProgressChart() {
+            const chart = document.getElementById('progress-chart');
+            const ctx = chart.getContext('2d');
+            
+            // Mock data points
+            const data = [120, 118, 122, 119, 117, 115, 116];
+            const width = chart.width;
+            const height = chart.height;
+            const spacing = width / (data.length - 1);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = '#2c3e50';
+            ctx.lineWidth = 2;
+            
+            data.forEach((point, index) => {
+                const x = index * spacing;
+                const y = height - (point - 100) * 4;
+                
+                if (index === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+        }
+
+        // Initialize the page
+        window.onload = function() {
+            initProgressChart();
+        };
+    </script>
+</body>
+</html>

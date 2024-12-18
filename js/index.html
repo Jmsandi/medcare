@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedTech Care Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #60a5fa;
+            --danger-color: #dc2626;
+            --success-color: #16a34a;
+            --warning-color: #d97706;
+        }
+
+        body {
+            background-color: #f3f4f6;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: #1e293b;
+            color: white;
+            padding: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            color: var(--accent-color);
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .nav-item:hover {
+            background-color: #2d3748;
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-color);
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            padding: 0.5rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            width: 300px;
+        }
+
+        .grid-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #374151;
+        }
+
+        .stat {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .alert-list {
+            list-style: none;
+        }
+
+        .alert-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: #fee2e2;
+            color: var(--danger-color);
+        }
+
+        .alert-item.warning {
+            background-color: #fef3c7;
+            color: var(--warning-color);
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .table th, .table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .table th {
+            background-color: #f8fafc;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .status-active {
+            background-color: #dcfce7;
+            color: var(--success-color);
+        }
+
+        .status-pending {
+            background-color: #fef3c7;
+            color: var(--warning-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">MedTech Care</div>
+            <ul class="nav-menu">
+                <li class="nav-item active">Dashboard</li>
+                <li class="nav-item">Patients</li>
+                <li class="nav-item">Appointments</li>
+                <li class="nav-item">Care Plans</li>
+                <li class="nav-item">Reports</li>
+                <li class="nav-item">Settings</li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>Dashboard</h1>
+                <input type="text" class="search-bar" placeholder="Search...">
+            </div>
+
+            <div class="grid-dashboard">
+                <div class="card">
+                    <div class="card-header">Total Patients</div>
+                    <div class="stat">1,234</div>
+                    <div class="subtitle">+12% from last month</div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Active Care Plans</div>
+                    <div class="stat">856</div>
+                    <div class="subtitle">Currently being monitored</div>
+                </div>
+                <div class="card">
+                    <div class="card-header">Today's Appointments</div>
+                    <div class="stat">28</div>
+                    <div class="subtitle">4 urgent cases</div>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <div class="card">
+                    <div class="card-header">Patient Visits</div>
+                    <canvas id="visitsChart"></canvas>
+                </div>
+                <div class="card">
+                    <div class="card-header">Care Plan Distribution</div>
+                    <canvas id="distributionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top: 1.5rem;">
+                <div class="card-header">Recent Patients</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Care Plan</th>
+                            <th>Last Visit</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Sarah Johnson</td>
+                            <td>Prenatal Care</td>
+                            <td>Today</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>Maria Garcia</td>
+                            <td>Postnatal Care</td>
+                            <td>Yesterday</td>
+                            <td><span class="status-badge status-active">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>Emily Wilson</td>
+                            <td>Prenatal Care</td>
+                            <td>2 days ago</td>
+                            <td><span class="status-badge status-pending">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Initialize Charts
+        const visitsCtx = document.getElementById('visitsChart').getContext('2d');
+        const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+
+        // Patient Visits Chart
+        new Chart(visitsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Patient Visits',
+                    data: [65, 78, 90, 85, 95, 100],
+                    borderColor: '#2563eb',
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Care Plan Distribution Chart
+        new Chart(distributionCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Prenatal', 'Postnatal', 'High Risk', 'Regular'],
+                datasets: [{
+                    data: [45, 25, 15, 15],
+                    backgroundColor: [
+                        '#2563eb',
+                        '#16a34a',
+                        '#dc2626',
+                        '#d97706'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Add click handlers for navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelector('.nav-item.active').classList.remove('active');
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

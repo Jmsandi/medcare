@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor's Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --background: #ecf0f1;
+            --text: #2c3e50;
+        }
+
+        body {
+            background-color: var(--background);
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background-color: var(--primary);
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h1 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+        }
+
+        .nav-item {
+            padding: 12px;
+            margin: 5px 0;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-item:hover {
+            background-color: var(--secondary);
+        }
+
+        .nav-item.active {
+            background-color: var(--secondary);
+        }
+
+        .main-content {
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .patient-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .emergency {
+            background-color: var(--accent);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .button {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h1>Doctor's Dashboard</h1>
+            <div class="nav-item active" data-section="patients">Current Patients</div>
+            <div class="nav-item" data-section="care-plans">Care Plans</div>
+            <div class="nav-item" data-section="treatments">Treatment History</div>
+            <div class="nav-item" data-section="prescriptions">Prescriptions</div>
+            <div class="nav-item" data-section="lab-results">Lab Results</div>
+            <div class="nav-item" data-section="records">Patient Records</div>
+            <div class="nav-item" data-section="schedule">Schedule</div>
+        </div>
+
+        <div class="main-content">
+            <div class="emergency" id="emergency-alert">
+                ⚠️ Emergency: Patient John Doe needs immediate attention in Room 204
+            </div>
+
+            <div class="header">
+                <h2>Current Patients</h2>
+                <button class="button" id="refresh-btn">Refresh Data</button>
+            </div>
+
+            <div class="section">
+                <div class="grid-container" id="patient-list">
+                    <!-- Patient cards will be inserted here -->
+                </div>
+            </div>
+
+            <div class="section">
+                <h3>Today's Schedule</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body">
+                        <!-- Schedule rows will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const patients = [
+            { id: 1, name: "John Doe", age: 45, condition: "Hypertension", room: "204" },
+            { id: 2, name: "Jane Smith", age: 32, condition: "Diabetes", room: "105" },
+            { id: 3, name: "Mike Johnson", age: 58, condition: "Arthritis", room: "301" }
+        ];
+
+        const schedule = [
+            { time: "09:00", patient: "John Doe", type: "Check-up", status: "Completed" },
+            { time: "10:30", patient: "Jane Smith", type: "Follow-up", status: "In Progress" },
+            { time: "14:00", patient: "Mike Johnson", type: "Consultation", status: "Scheduled" }
+        ];
+
+        // DOM Elements
+        const patientList = document.getElementById('patient-list');
+        const scheduleBody = document.getElementById('schedule-body');
+        const emergencyAlert = document.getElementById('emergency-alert');
+        const refreshBtn = document.getElementById('refresh-btn');
+        const navItems = document.querySelectorAll('.nav-item');
+
+        // Render patient cards
+        function renderPatients() {
+            patientList.innerHTML = patients.map(patient => `
+                <div class="patient-card">
+                    <h3>${patient.name}</h3>
+                    <p>Age: ${patient.age}</p>
+                    <p>Condition: ${patient.condition}</p>
+                    <p>Room: ${patient.room}</p>
+                    <button class="button" onclick="viewPatientDetails(${patient.id})">View Details</button>
+                </div>
+            `).join('');
+        }
+
+        // Render schedule
+        function renderSchedule() {
+            scheduleBody.innerHTML = schedule.map(appointment => `
+                <tr>
+                    <td>${appointment.time}</td>
+                    <td>${appointment.patient}</td>
+                    <td>${appointment.type}</td>
+                    <td>${appointment.status}</td>
+                </tr>
+            `).join('');
+        }
+
+        // Navigation handling
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                // In a real application, this would load different content
+                console.log(`Navigating to ${item.dataset.section}`);
+            });
+        });
+
+        // Simulated emergency alert
+        function toggleEmergencyAlert() {
+            emergencyAlert.style.display = emergencyAlert.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Refresh data
+        refreshBtn.addEventListener('click', () => {
+            renderPatients();
+            renderSchedule();
+            // In a real application, this would fetch fresh data from the server
+            console.log('Refreshing data...');
+        });
+
+        // View patient details
+        function viewPatientDetails(patientId) {
+            // In a real application, this would show detailed patient information
+            console.log(`Viewing details for patient ${patientId}`);
+        }
+
+        // Initial render
+        renderPatients();
+        renderSchedule();
+
+        // Simulate occasional emergency alerts
+        setInterval(toggleEmergencyAlert, 10000);
+    </script>
+</body>
+</html>

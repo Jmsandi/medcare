@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Lab Dashboard</title>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-dark: #4338ca;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --success: #22c55e;
+            --warning: #eab308;
+            --danger: #ef4444;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-100);
+            color: var(--gray-800);
+            min-height: 100vh;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Modern Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid var(--gray-200);
+            padding: 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 1.5rem;
+        }
+
+        .logo img {
+            width: 2.5rem;
+            height: 2.5rem;
+        }
+
+        .logo h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .nav-group {
+            margin-bottom: 1rem;
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--gray-700);
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: var(--gray-50);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+            background-color: var(--gray-100);
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.5rem;
+            background-color: white;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-700);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.5rem;
+            color: white;
+        }
+
+        .stat-info h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-info p {
+            color: var(--gray-700);
+            font-size: 0.875rem;
+        }
+
+        /* Charts */
+        .chart-container {
+            height: 300px;
+            padding: 1rem;
+        }
+
+        /* Tables */
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .modern-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .modern-table th,
+        .modern-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .modern-table th {
+            background-color: var(--gray-50);
+            font-weight: 600;
+        }
+
+        .modern-table tr:hover {
+            background-color: var(--gray-50);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Status Badges */
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+
+        .badge-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .alert-danger {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Charts */
+        #activityChart {
+            width: 100%;
+            height: 300px;
+        }
+
+        #sampleChart {
+            width: 100%;
+            height: 300px;
+        }
+
+        .section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .section.active {
+            display: block;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <img src="/api/placeholder/40/40" alt="Lab Logo">
+                <h1>LabFlow Pro</h1>
+            </div>
+
+            <nav>
+                <div class="nav-group">
+                    <div class="nav-label">Main Menu</div>
+                    <div class="nav-items">
+                        <div class="nav-item active" data-section="dashboard">
+                            <i class="fas fa-home"></i>
+                            Dashboard
+                        </div>
+                        <div class="nav-item" data-section="test-requests">
+                            <i class="fas fa-flask"></i>
+                            Test Requests
+                        </div>
+                        <div class="nav-item" data-section="sample-tracking">
+                            <i class="fas fa-vial"></i>
+                            Sample Tracking
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-label">Management</div>
+                    <div class="nav-items">
+                        <div class="nav-item" data-section="result-entry">
+                            <i class="fas fa-edit"></i>
+                            Result Entry
+                        </div>
+                        <div class="nav-item" data-section="result-verification">
+                            <i class="fas fa-check-double"></i>
+                            Verification
+                        </div>
+                        <div class="nav-item" data-section="reports">
+                            <i class="fas fa-chart-bar"></i>
+                            Reports
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="header">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search samples, patients...">
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        New Test Request
+                    </button>
+                </div>
+            </header>
+
+            <section id="dashboard" class="section active">
+                <div class="dashboard-grid">
+                    <div class="card stat-card">
+                        <div class="stat-icon" style="background-color: var(--primary);">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>2,547</h3>
+                            <p>Active Tests</p>
+                        </div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-icon" style="background-color: var(--success);">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>1,234</h3>
+                            <p>Completed Today</p>
+                        </div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-icon" style="background-color: var(--warning);">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>45</h3>
+                            <p>Pending Verification</p>
+                        </div>
+                    </div>
+
+                    <div class="card stat-card">
+                        <div class="stat-icon" style="background-color: var(--danger);">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>Critical Results</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Test Activity</h3>
+                        <div class="chart-container">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3>Sample Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="sampleChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Recent Test Results</h3>
+                    <div class="table-container">
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Patient ID</th>
+                                    <th>Test Type</th>
+                                    <th>Result</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>P-12345</td>
+                                    <td>Blood Chemistry</td>
+                                    <td>140 mg/dL</td>
+                                    <td><span class="badge badge-danger">Critical</span></td>
+                                    <td><button class="btn btn-primary">View</button></td>
+                                </tr>
+                                <!-- Add more rows as needed -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Test Requests Section -->
+            <section id="test-requests" class="section">
+                <h2>Test Requests</h2>
+                <div class="card">
+                    <h3>New Test Request</h3>
+                    <form class="form-group">
+                        <div class="form-group">
+                            <label class="form-label">Patient ID</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Test Type</label>
+                            <select class="form-control">
+                                <option>Blood Chemistry</option>
+                                <option>Hematology</option>
+                                <option>Urinalysis</option>
+                                <option>Microbiology</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priority</label>
+                            <select class="form-control">
+                                <option>Routine</option>
+                                <option>Urgent</option>
+                                <option>STAT</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Request</button>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3>Recent Requests</h3>
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Patient ID</th>
+                                <th>Test Type</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table content -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Sample Tracking Section -->
+            <section id="sample-tracking" class="section">
+                <h2>Sample Tracking</h2>
+                <div class="card">
+                    <h3>Track Sample</h3>
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Enter Sample ID">
+                        <button class="btn btn-primary" style="margin-top: 1rem;">Track Sample</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Active Samples</h3>
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Sample ID</th>
+                                <th>Collection Time</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table content -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Result Entry Section -->
+            <section id="result-entry" class="section">
+                <h2>Result Entry</h2>
+                <div class="card">
+                    <h3>Enter Results</h3>
+                    <form>
+                        <div class="form-group">
+                            <label class="form-label">Sample ID</label>
+                            <input type="text" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Test Parameters</label>
+                            <div class="parameters-container">
+                                <!-- Dynamic parameters will be added here -->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-control"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Results</button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Result Verification Section -->
+            <section id="result-verification" class="section">
+                <h2>Result Verification</h2>
+                <div class="card">
+                    <h3>Pending Verification</h3>
+                    <table class="modern-table">
+                        <thead>
+                            <tr>
+                                <th>Sample ID</th>
+                                <th>Test Type</th>
+                                <th>Result</th>
+                                <th>Reference Range</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table content -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Reports Section -->
+            <section id="reports" class="section">
+                <h2>Reports</h2>
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h3>Generate Report</h3>
+                        <form>
+                            <div class="form-group">
+                                <label class="form-label">Report Type</label>
+                                <select class="form-control">
+                                    <option>Daily Summary</option>
+                                    <option>Monthly Statistics</option>
+                                    <option>Critical Results Report</option>
+                                    <option>Workload Analysis</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Date Range</label>
+                                <input type="date" class="form-control" style="margin-bottom: 0.5rem;">
+                                <input type="date" class="form-control">
+                            </div>
+                            <button class="btn btn-primary">Generate Report</button>
+                        </form>
+                    </div>
+
+                    <div class="card">
+                        <h3>Recent Reports</h3>
+                        <table class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Report Name</th>
+                                    <th>Generated Date</th>
+                                    <th>Type</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Table content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script>
+        // Add these variables at the start of the script
+        const testTypes = ['Blood Chemistry', 'Hematology', 'Urinalysis', 'Microbiology'];
+        const statuses = ['Normal', 'Warning', 'Critical'];
+        
+        // Store chart references
+        let activityChart, sampleChart;
+
+        // Initialize charts
+        window.addEventListener('load', () => {
+            // Activity Chart
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            activityChart = new Chart(activityCtx, {
+                // ... existing chart configuration ...
+            });
+
+            // Sample Distribution Chart
+            const sampleCtx = document.getElementById('sampleChart').getContext('2d');
+            sampleChart = new Chart(sampleCtx, {
+                // ... existing chart configuration ...
+            });
+
+            // Initial population of tables
+            populateTables();
+        });
+
+        // Modify the section display logic
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                // Remove active class from all items
+                document.querySelectorAll('.nav-item').forEach(nav => 
+                    nav.classList.remove('active'));
+                
+                // Add active class to clicked item
+                this.classList.add('active');
+
+                // Hide all sections
+                document.querySelectorAll('.section').forEach(section => 
+                    section.classList.remove('active'));
+
+                // Show selected section
+                const sectionId = this.getAttribute('data-section');
+                document.getElementById(sectionId)?.classList.add('active');
+            });
+        });
+
+        // Populate tables with sample data
+        function populateTables() {
+            const tables = document.querySelectorAll('.modern-table tbody');
+            tables.forEach(table => {
+                for (let i = 0; i < 5; i++) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>ID-${Math.floor(Math.random() * 10000)}</td>
+                        <td>Patient-${Math.floor(Math.random() * 10000)}</td>
+                        <td>${testTypes[Math.floor(Math.random() * testTypes.length)]}</td>
+                        <td><span class="badge badge-${statuses[i % 3].toLowerCase()}">${statuses[i % 3]}</span></td>
+                        <td><button class="btn btn-primary">View</button></td>
+                    `;
+                    table.appendChild(tr);
+                }
+            });
+        }
+
+        // Initialize tables
+        populateTables();
+
+        // Activity Chart
+        const activityCtx = document.getElementById('activityChart').getContext('2d');
+        new Chart(activityCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Tests Performed',
+                    data: [65, 59, 80, 81, 56, 55, 40],
+                    fill: true,
+                    borderColor: '#4f46e5',
+                    backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            drawBorder: false
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Sample Distribution Chart
+        const sampleCtx = document.getElementById('sampleChart').getContext('2d');
+        new Chart(sampleCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Processing', 'Pending', 'Completed', 'Critical'],
+                datasets: [{
+                    data: [30, 20, 45, 5],
+                    backgroundColor: [
+                        '#4f46e5',
+                        '#eab308',
+                        '#22c55e',
+                        '#ef4444'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+
+        // Real-time updates simulation
+        function updateCharts() {
+            // Simulate new data
+            const newTestData = Array.from({length: 7}, () => 
+                Math.floor(Math.random() * 50) + 30
+            );
+            
+            activityChart.data.datasets[0].data = newTestData;
+            activityChart.update();
+
+            const newSampleData = Array.from({length: 4}, () => 
+                Math.floor(Math.random() * 30) + 10
+            );
+            
+            sampleChart.data.datasets[0].data = newSampleData;
+            sampleChart.update();
+        }
+
+        // Update every 5 seconds
+        setInterval(updateCharts, 5000);
+
+        // Search functionality
+        const searchInput = document.querySelector('.search-bar input');
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // Add search logic here
+        });
+
+        // Dynamic table row addition
+        function addTableRow(data) {
+            const tbody = document.querySelector('.modern-table tbody');
+            const tr = document.createElement('tr');
+            
+            tr.innerHTML = `
+                <td>${data.patientId}</td>
+                <td>${data.testType}</td>
+                <td>${data.result}</td>
+                <td><span class="badge badge-${data.status.toLowerCase()}">${data.status}</span></td>
+                <td><button class="btn btn-primary">View</button></td>
+            `;
+            
+            tbody.insertBefore(tr, tbody.firstChild);
+        }
+
+        // Simulate real-time notifications
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `alert alert-${type}`;
+            notification.innerHTML = `
+                <i class="fas fa-info-circle"></i>
+                <span>${message}</span>
+            `;
+            
+            document.querySelector('.main-content').insertBefore(
+                notification, 
+                document.querySelector('.dashboard-grid')
+            );
+
+            setTimeout(() => notification.remove(), 5000);
+        }
+
+        // Sample data generation
+        function generateRandomTest() {
+            return {
+                patientId: 'P-' + Math.floor(Math.random() * 10000),
+                testType: testTypes[Math.floor(Math.random() * testTypes.length)],
+                result: Math.floor(Math.random() * 200) + ' mg/dL',
+                status: statuses[Math.floor(Math.random() * statuses.length)]
+            };
+        }
+
+        // Simulate incoming tests
+        setInterval(() => {
+            const newTest = generateRandomTest();
+            addTableRow(newTest);
+            
+            if (newTest.status === 'Critical') {
+                showNotification(
+                    `Critical result detected for Patient ${newTest.patientId}`,
+                    'danger'
+                );
+            }
+        }, 10000);
+
+        // Theme switcher
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            // Add dark mode specific styles
+        }
+
+        // Export functionality
+        function exportData(format) {
+            // Add export logic here
+            showNotification(`Exporting data in ${format} format...`);
+        }
+
+        // Initialize tooltips
+        const tooltips = document.querySelectorAll('[data-tooltip]');
+        tooltips.forEach(tooltip => {
+            // Initialize tooltips logic
+        });
+
+        // Add drag and drop functionality for cards
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.setAttribute('draggable', true);
+            card.addEventListener('dragstart', handleDragStart);
+            card.addEventListener('dragover', handleDragOver);
+            card.addEventListener('drop', handleDrop);
+        });
+
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.id);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const draggedId = e.dataTransfer.getData('text/plain');
+            const draggedElement = document.getElementById(draggedId);
+            const dropZone = e.target.closest('.card');
+            
+            if (draggedElement && dropZone) {
+                const parent = dropZone.parentNode;
+                const draggedRect = draggedElement.getBoundingClientRect();
+                const dropRect = dropZone.getBoundingClientRect();
+                
+                if (draggedRect.top < dropRect.top) {
+                    parent.insertBefore(draggedElement, dropZone.nextSibling);
+                } else {
+                    parent.insertBefore(draggedElement, dropZone);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

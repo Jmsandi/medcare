@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Patient Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4A90E2;
+            --secondary-color: #F7F9FC;
+            --accent-color: #34C759;
+            --text-color: #2C3E50;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        /* Modern Header */
+        .header {
+            background-color: white;
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .notification-badge {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: #FF3B30;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Modern Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 70px;
+            width: 250px;
+            height: calc(100vh - 70px);
+            background-color: white;
+            padding: 2rem 1rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+            z-index: 99;
+        }
+
+        @media (max-width: 1023px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 250px;
+            }
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: var(--border-radius);
+            color: var(--text-color);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        .nav-item i {
+            margin-right: 1rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 0;
+            margin-top: 70px;
+            padding: 2rem;
+            transition: margin-left 0.3s ease;
+        }
+
+        @media (min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 250px;
+            }
+        }
+
+        /* Modern Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* Modern Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #E5E7EB;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Modern Buttons */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #357ABD;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Modern Calendar */
+        .calendar {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .calendar-day {
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+        }
+
+        .calendar-day:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .calendar-day.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Modern Messages */
+        .message-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            box-shadow: var(--shadow);
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .message-content {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card {
+            animation: slideIn 0.3s ease;
+        }
+
+        * Calendar Styles */
+    .calendar-day.header {
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .time-slots .btn {
+        margin: 0.25rem;
+    }
+
+    /* Medical Timeline Styles */
+    .medical-timeline {
+        position: relative;
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 1.5rem;
+    }
+
+    .timeline-item::before {
+        content: '';
+        position: absolute;
+        left: -1.5rem;
+        top: 1.5rem;
+        width: 1rem;
+        height: 1rem;
+        background: var(--primary-color);
+        border-radius: 50%;
+    }
+
+    /* Test Results Styles */
+    .test-results-list .test-item:last-child {
+        border-bottom: none;
+    }
+
+    .test-item button {
+        margin-left: 0.5rem;
+    }
+
+    /* Animation for page transitions */
+    .page {
+        opacity: 0;
+        visibility: hidden;
+        height: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .page.active {
+        opacity: 1;
+        visibility: visible;
+        height: auto;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-brand">
+            <button class="menu-btn">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">HealthHub</div>
+        </div>
+        <div class="header-actions">
+            <div class="notification-badge">
+                <i class="fas fa-bell"></i>
+                <span class="badge">3</span>
+            </div>
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                John Doe
+            </div>
+        </div>
+    </header>
+
+    <nav class="sidebar">
+        <a href="#dashboard" class="nav-item">
+            <i class="fas fa-home"></i>
+            Dashboard
+        </a>
+        <a href="#appointments" class="nav-item">
+            <i class="fas fa-calendar"></i>
+            Appointments
+        </a>
+        <a href="#records" class="nav-item">
+            <i class="fas fa-file-medical"></i>
+            Medical Records
+        </a>
+        <a href="#prescriptions" class="nav-item">
+            <i class="fas fa-prescription-bottle-alt"></i>
+            Prescriptions
+        </a>
+        <a href="#messages" class="nav-item">
+            <i class="fas fa-comments"></i>
+            Messages
+        </a>
+        <a href="#billing" class="nav-item">
+            <i class="fas fa-file-invoice-dollar"></i>
+            Billing
+        </a>
+    </nav>
+
+    <main class="main-content">
+        <div id="dashboard" class="page active">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Quick Actions</h3>
+                    </div>
+                    <div class="card-content">
+                        <button class="btn btn-primary" style="margin-right: 1rem;">
+                            <i class="fas fa-calendar-plus"></i> Book Appointment
+                        </button>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-message"></i> Message Doctor
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Upcoming Appointments</h3>
+                        <button class="btn btn-outline">View All</button>
+                    </div>
+                    <div class="appointment-list">
+                        <div class="appointment-item" style="padding: 1rem 0; border-bottom: 1px solid #eee;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>Dr. Smith</strong>
+                                    <div style="color: #666;">General Checkup</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="color: var(--primary-color);">Dec 20, 2024</div>
+                                    <div style="color: #666;">10:00 AM</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Recent Test Results</h3>
+                    </div>
+                    <div class="test-results">
+                        <div class="result-item" style="padding: 1rem 0; border-bottom: 1px solid #eee;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>Blood Work</strong>
+                                    <div style="color: #666;">Complete Blood Count</div>
+                                </div>
+                                <button class="btn btn-outline">View</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Medications</h3>
+                    </div>
+                    <div class="medication-list">
+                        <div class="medication-item" style="padding: 1rem 0; border-bottom: 1px solid #eee;">
+                            <div style="display: flex; justify-content: space-between;">
+                                <div>
+                                    <strong>Lisinopril</strong>
+                                    <div style="color: #666;">10mg daily</div>
+                                </div>
+                                <button class="btn btn-outline">Refill</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Appointments Section -->
+<div id="appointments" class="page">
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Schedule Appointment</h3>
+            </div>
+            <div class="calendar">
+                <div class="calendar-header">
+                    <button class="btn btn-outline"><i class="fas fa-chevron-left"></i></button>
+                    <h4>December 2024</h4>
+                    <button class="btn btn-outline"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="calendar-grid">
+                    <!-- Calendar days will be generated by JS -->
+                </div>
+            </div>
+            <div class="time-slots" style="margin-top: 1rem;">
+                <h4 style="margin-bottom: 1rem;">Available Time Slots</h4>
+                <div class="grid" style="grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));">
+                    <button class="btn btn-outline">9:00 AM</button>
+                    <button class="btn btn-outline">10:00 AM</button>
+                    <button class="btn btn-outline">11:00 AM</button>
+                    <button class="btn btn-outline">2:00 PM</button>
+                    <button class="btn btn-outline">3:00 PM</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Upcoming Appointments</h3>
+            </div>
+            <div class="appointment-list">
+                <div class="appointment-item" style="padding: 1rem; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <span style="background: var(--accent-color); color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">Confirmed</span>
+                            <h4 style="margin: 0.5rem 0;">Dr. Smith - General Checkup</h4>
+                            <p style="color: #666;">Dec 20, 2024 at 10:00 AM</p>
+                        </div>
+                        <div>
+                            <button class="btn btn-outline" style="margin-right: 0.5rem;">Reschedule</button>
+                            <button class="btn btn-outline" style="color: #FF3B30; border-color: #FF3B30;">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- More appointments... -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Medical History Section -->
+<div id="medical-history" class="page">
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Medical History Overview</h3>
+            </div>
+            <div class="medical-timeline">
+                <div class="timeline-item" style="padding: 1rem; border-left: 2px solid var(--primary-color); margin-left: 1rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <span style="background: var(--secondary-color); padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem;">2023</span>
+                    </div>
+                    <h4>Appendectomy</h4>
+                    <p style="color: #666;">Surgery performed by Dr. Johnson</p>
+                    <button class="btn btn-outline" style="margin-top: 0.5rem;">View Details</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Conditions & Allergies</h3>
+            </div>
+            <div class="conditions-list">
+                <div style="margin-bottom: 1rem;">
+                    <h4 style="margin-bottom: 0.5rem;">Chronic Conditions</h4>
+                    <div class="condition-tag" style="display: inline-block; background: #FFF3E0; color: #F57C00; padding: 0.5rem; border-radius: 12px; margin: 0.25rem;">
+                        Hypertension
+                    </div>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 0.5rem;">Allergies</h4>
+                    <div class="condition-tag" style="display: inline-block; background: #FFEBEE; color: #E53935; padding: 0.5rem; border-radius: 12px; margin: 0.25rem;">
+                        Penicillin
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Test Results Section -->
+<div id="test-results" class="page">
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Recent Test Results</h3>
+                <button class="btn btn-outline">Filter Results</button>
+            </div>
+            <div class="test-results-list">
+                <div class="test-item" style="padding: 1rem; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4>Complete Blood Count</h4>
+                            <p style="color: #666;">Date: Nov 15, 2024</p>
+                            <span style="color: var(--accent-color);"><i class="fas fa-check-circle"></i> Within normal range</span>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary">View Report</button>
+                            <button class="btn btn-outline">Download PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Test History Graph</h3>
+            </div>
+            <div class="test-graph" style="height: 300px; background: var(--secondary-color); border-radius: var(--border-radius); margin-top: 1rem;">
+                <!-- Placeholder for graph -->
+                <div style="text-align: center; padding-top: 130px; color: #666;">
+                    Interactive graph showing test result trends
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Medical Records Section -->
+<div id="records" class="page">
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Medical Records</h3>
+                <button class="btn btn-primary">Request Records</button>
+            </div>
+            <div class="records-list">
+                <div class="record-item" style="padding: 1rem; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4>Annual Physical</h4>
+                            <p style="color: #666;">Date: Oct 15, 2024</p>
+                            <span>Dr. Smith</span>
+                        </div>
+                        <button class="btn btn-outline">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Prescriptions Section -->
+<div id="prescriptions" class="page">
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Active Prescriptions</h3>
+                <button class="btn btn-primary">Request Refill</button>
+            </div>
+            <div class="prescription-list">
+                <div class="prescription-item" style="padding: 1rem; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4>Lisinopril 10mg</h4>
+                            <p style="color: #666;">Take once daily</p>
+                            <span>Refills remaining: 3</span>
+                        </div>
+                        <button class="btn btn-outline">Refill</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Messages Section -->
+<div id="messages" class="page">
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Messages</h3>
+                <button class="btn btn-primary">New Message</button>
+            </div>
+            <div class="message-list">
+                <div class="message-item" style="padding: 1rem; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <div>
+                            <h4>Dr. Smith</h4>
+                            <p style="color: #666;">Follow-up on your last visit</p>
+                            <span style="font-size: 0.8rem;">Dec 15, 2024</span>
+                        </div>
+                        <span style="color: var(--accent-color);">New</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Billing Section -->
+<div id="billing" class="page">
+    <div class="grid">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Recent Bills</h3>
+                <button class="btn btn-primary">Make Payment</button>
+            </div>
+            <div class="billing-list">
+                <div class="billing-item" style="padding: 1rem; border-bottom: 1px solid #eee;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <h4>Office Visit</h4>
+                            <p style="color: #666;">Dec 10, 2024</p>
+                            <span>Amount: $150</span>
+                        </div>
+                        <div>
+                            <span style="color: var(--accent-color);">Paid</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</main>
+
+    <script>
+        // Toggle sidebar
+        const menuBtn = document.querySelector('.menu-btn');
+        const sidebar = document.querySelector('.sidebar');
+        const mainContent = document.querySelector('.main-content');
+
+        function toggleSidebar() {
+            const isMobile = window.innerWidth < 1024;
+            sidebar.classList.toggle('active');
+            
+            if (!isMobile) {
+                mainContent.style.marginLeft = sidebar.classList.contains('active') ? '250px' : '0';
+            }
+        }
+
+        menuBtn.addEventListener('click', toggleSidebar);
+
+        // Close sidebar on mobile when clicking outside
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 1024 && 
+                !sidebar.contains(e.target) && 
+                !menuBtn.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Handle navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('href').substring(1);
+                showPage(targetId);
+            });
+        });
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            if (window.innerWidth < 1024) {
+                sidebar.classList.remove('active');
+            }
+        }
+
+        //new
+         // Calendar Generation
+    function generateCalendar() {
+        const calendarGrid = document.querySelector('.calendar-grid');
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        
+        // Clear existing calendar
+        calendarGrid.innerHTML = '';
+
+        // Add day headers
+        days.forEach(day => {
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'calendar-day header';
+            dayHeader.textContent = day;
+            calendarGrid.appendChild(dayHeader);
+        });
+
+        // Add days
+        for (let i = 1; i <= 31; i++) {
+            const dayElement = document.createElement('div');
+            dayElement.className = 'calendar-day';
+            dayElement.textContent = i;
+            dayElement.addEventListener('click', () => {
+                document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                dayElement.classList.add('selected');
+            });
+            calendarGrid.appendChild(dayElement);
+        }
+    }
+
+    // Initialize calendar
+    generateCalendar();
+
+    // Add smooth scrolling for navigation
+    document.querySelectorAll('.nav-item').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href').substring(1);
+            document.getElementById(targetId).scrollIntoView({ behavior: 'smooth' });
+        });
+    });
+
+        // Responsive behavior
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 1024) {
+                mainContent.style.marginLeft = '250px';
+                sidebar.classList.add('active');
+            } else {
+                mainContent.style.marginLeft = '0';
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Initialize on load
+        if (window.innerWidth >= 1024) {
+            sidebar.classList.add('active');
+            mainContent.style.marginLeft = '250px';
+        }
+    </script>
+</body>
+</html>

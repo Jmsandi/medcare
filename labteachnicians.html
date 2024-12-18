@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Lab Dashboard</title>
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #818cf8;
+            --success-color: #22c55e;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --text-color: #1f2937;
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 0 1rem 1rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-title {
+            color: var(--text-color);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.875rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            background: var(--card-bg);
+            padding: 0.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-button {
+            padding: 0.75rem 1.5rem;
+            background: transparent;
+            color: var(--text-color);
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .tab-button:hover {
+            background: rgba(79, 70, 229, 0.1);
+        }
+
+        .tab-button.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background: var(--secondary-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 1.5rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+
+        tbody tr:hover {
+            background: #f9fafb;
+        }
+
+        .search-bar {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .search-bar input {
+            padding-left: 2.5rem;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+        }
+
+        .status-pill {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .priority-high {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .priority-medium {
+            background: #fef3c7;
+            color: #d97706;
+        }
+
+        .priority-low {
+            background: #d1fae5;
+            color: #059669;
+        }
+
+        .chart-container {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--card-bg);
+            border-radius: 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .notification {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 1rem;
+            background: var(--success-color);
+            color: white;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Lab Technician Dashboard</h1>
+            <p>Welcome back, Dr. Smith</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <div class="stat-title">Total Tests Today</div>
+                <div class="stat-value">24</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Pending Results</div>
+                <div class="stat-value">8</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">Completed Today</div>
+                <div class="stat-value">16</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-title">High Priority</div>
+                <div class="stat-value">3</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('result-entry')">Result Entry</button>
+            <button class="tab-button" onclick="showTab('test-history')">Test History</button>
+            <button class="tab-button" onclick="showTab('reports')">Reports</button>
+            <button class="tab-button" onclick="showTab('analytics')">Analytics</button>
+        </div>
+
+        <!-- Result Entry Tab -->
+        <div id="result-entry" class="tab-content active">
+            <h2>Enter Test Results</h2>
+            <form id="result-form">
+                <div class="form-group">
+                    <label for="patient-id">Patient ID</label>
+                    <input type="text" id="patient-id" required>
+                </div>
+                <div class="form-group">
+                    <label for="test-type">Test Type</label>
+                    <select id="test-type" required>
+                        <option value="">Select Test Type</option>
+                        <option value="blood">Complete Blood Count (CBC)</option>
+                        <option value="metabolic">Comprehensive Metabolic Panel</option>
+                        <option value="lipid">Lipid Panel</option>
+                        <option value="thyroid">Thyroid Function Test</option>
+                        <option value="covid">COVID-19 Test</option>
+                        <option value="urine">Urinalysis</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="priority">Priority Level</label>
+                    <select id="priority" required>
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="test-results">Results</label>
+                    <textarea id="test-results" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Additional Notes</label>
+                    <textarea id="notes" rows="2"></textarea>
+                </div>
+                <button type="submit">Submit Results</button>
+            </form>
+        </div>
+
+        <!-- Test History Tab -->
+        <div id="test-history" class="tab-content">
+            <h2>Test History</h2>
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" placeholder="Search by Patient ID, Test Type, or Status...">
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Patient ID</th>
+                        <th>Test Type</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Technician</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="history-table">
+                    <!-- Data will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Reports Tab -->
+        <div id="reports" class="tab-content">
+            <h2>Generate Reports</h2>
+            <div class="form-group">
+                <label for="report-type">Report Type</label>
+                <select id="report-type">
+                    <option value="daily">Daily Summary</option>
+                    <option value="weekly">Weekly Analysis</option>
+                    <option value="monthly">Monthly Statistics</option>
+                    <option value="custom">Custom Range</option>
+                </select>
+            </div>
+            <div class="form-group" id="custom-range" style="display: none;">
+                <label>Date Range</label>
+                <div style="display: flex; gap: 1rem;">
+                    <input type="date" id="start-date">
+                    <input type="date" id="end-date">
+                </div>
+            </div>
+            <button onclick="generateReport()">Generate Report</button>
+            <div id="report-preview" class="chart-container"></div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div id="analytics" class="tab-content">
+            <h2>Analytics Dashboard</h2>
+            <div class="chart-container">
+                <canvas id="testsChart"></canvas>
+            </div>
+            <div class="dashboard-stats" style="margin-top: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-title">Average Processing Time</div>
+                    <div class="stat-value">2.4 hrs</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Test Success Rate</div>
+                    <div class="stat-value">98.5%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Monthly Tests</div>
+                    <div class="stat-value">467</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification">
+        Results submitted successfully!
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        // Sample test history data
+        const testHistory = [
+            { date: '2024-12-14', patientId: 'P001', testType: 'Complete Blood Count', priority: 'high', status: 'Completed', technician: 'Dr. Smith' },
+            { date: '2024-12-14', patientId: 'P002', testType: 'Urinalysis', priority: 'medium', status: 'Pending', technician: 'Dr. Johnson' },
+            { date: '2024-12-13', patientId: 'P003', testType: 'COVID-19 Test', priority: 'high', status: 'Completed', technician: 'Dr. Smith' },
+            { date: '2024-12-13', patientId: 'P004', testType: 'Lipid Panel', priority: 'low', status: 'Completed', technician: 'Dr. Wilson' }
+        ];
+
+        // Show/Hide Tabs
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+            
+            // Initialize charts when analytics tab is shown
+            if (tabId === 'analytics') {
+                initializeCharts();
+            }
+        }
+
+        // Handle result form submission
+        document.getElementById('result-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const patientId = document.getElementById('patient-id').value;
+            const testType = document.getElementById('test-type');
+            const priority = document.getElementById('priority').value;
+            const selectedTest = testType.options[testType.selectedIndex].text;
+
+            // Add to test history
+            testHistory.unshift({
+                date: new Date().toISOString().split('T')[0],
+                patientId: patientId,
+                testType: selectedTest,
+                priority: priority,
+                status: 'Pending',
+                technician: 'Dr. Smith'
+            });
+
+            // Show notification
+            showNotification('Results submitted successfully!');
+
+            // Clear form
+            this.reset();
+            populateHistory();
+            updateStats();
+        });
+
+        // Show notification function
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            notification.style.backgroundColor = 'var(--success-color)';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Populate test history table
+        function populateHistory() {
+            const tableBody = document.getElementById('history-table');
+            tableBody.innerHTML = '';
+            
+            testHistory.forEach(test => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${test.date}</td>
+                    <td>${test.patientId}</td>
+                    <td>${test.testType}</td>
+                    <td><span class="status-pill priority-${test.priority.toLowerCase()}">${test.priority}</span></td>
+                    <td><span class="status-pill status-${test.status.toLowerCase()}">${test.status}</span></td>
+                    <td>${test.technician}</td>
+                    <td>
+                        <button onclick="viewDetails('${test.patientId}')" style="background: var(--secondary-color)">View</button>
+                        <button onclick="updateStatus('${test.patientId}')" style="background: var(--success-color)">Update</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredHistory = testHistory.filter(test => 
+                test.patientId.toLowerCase().includes(searchTerm) ||
+                test.testType.toLowerCase().includes(searchTerm) ||
+                test.status.toLowerCase().includes(searchTerm)
+            );
+            
+            const tableBody = document.getElementById('history-table');
+            tableBody.innerHTML = '';
+            
+            filteredHistory.forEach(test => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${test.date}</td>
+                    <td>${test.patientId}</td>
+                    <td>${test.testType}</td>
+                    <td><span class="status-pill priority-${test.priority.toLowerCase()}">${test.priority}</span></td>
+                    <td><span class="status-pill status-${test.status.toLowerCase()}">${test.status}</span></td>
+                    <td>${test.technician}</td>
+                    <td>
+                        <button onclick="viewDetails('${test.patientId}')" style="background: var(--secondary-color)">View</button>
+                        <button onclick="updateStatus('${test.patientId}')" style="background: var(--success-color)">Update</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        });
+
+        // Initialize charts
+        function initializeCharts() {
+            const ctx = document.getElementById('testsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Tests Performed',
+                        data: [12, 19, 15, 17, 14, 8, 5],
+                        borderColor: 'var(--primary-color)',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Weekly Test Volume'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Generate report
+        function generateReport() {
+            const reportType = document.getElementById('report-type').value;
+            const reportPreview = document.getElementById('report-preview');
+            
+            // Show/hide custom date range based on selection
+            document.getElementById('custom-range').style.display = 
+                reportType === 'custom' ? 'block' : 'none';
+            
+            // Sample report data
+            const completedTests = testHistory.filter(test => test.status === 'Completed').length;
+            const pendingTests = testHistory.filter(test => test.status === 'Pending').length;
+            const highPriority = testHistory.filter(test => test.priority === 'high').length;
+            
+            reportPreview.innerHTML = `
+                <h3>${reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report</h3>
+                <div class="dashboard-stats" style="margin-top: 1rem;">
+                    <div class="stat-card">
+                        <div class="stat-title">Completed Tests</div>
+                        <div class="stat-value">${completedTests}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">Pending Tests</div>
+                        <div class="stat-value">${pendingTests}</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-title">High Priority Tests</div>
+                        <div class="stat-value">${highPriority}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // View details function
+        function viewDetails(patientId) {
+            const test = testHistory.find(t => t.patientId === patientId);
+            alert(`
+                Patient Details:
+                ID: ${test.patientId}
+                Test Type: ${test.testType}
+                Status: ${test.status}
+                Priority: ${test.priority}
+                Technician: ${test.technician}
+                Date: ${test.date}
+            `);
+        }
+
+        // Update test status
+        function updateStatus(patientId) {
+            const test = testHistory.find(t => t.patientId === patientId);
+            test.status = test.status === 'Pending' ? 'Completed' : 'Pending';
+            populateHistory();
+            updateStats();
+            showNotification('Status updated successfully!');
+        }
+
+        // Update dashboard stats
+        function updateStats() {
+            const todayTests = testHistory.filter(test => 
+                test.date === new Date().toISOString().split('T')[0]
+            ).length;
+            
+            const pendingTests = testHistory.filter(test => 
+                test.status === 'Pending'
+            ).length;
+            
+            const completedToday = testHistory.filter(test => 
+                test.date === new Date().toISOString().split('T')[0] && 
+                test.status === 'Completed'
+            ).length;
+            
+            const highPriority = testHistory.filter(test => 
+                test.priority === 'high' && 
+                test.status === 'Pending'
+            ).length;
+
+            // Update stat cards
+            document.querySelectorAll('.stat-card .stat-value').forEach((stat, index) => {
+                const values = [todayTests, pendingTests, completedToday, highPriority];
+                stat.textContent = values[index];
+            });
+        }
+
+        // Initialize the page
+        populateHistory();
+        updateStats();
+    </script>
+</body>
+</html>

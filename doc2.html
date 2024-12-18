@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor's Dashboard - Complete System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #3b82f6;
+            --accent: #dc2626;
+            --success: #22c55e;
+            --warning: #eab308;
+            --background: #f1f5f9;
+            --text: #1e293b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* Layout */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            width: 280px;
+            height: 100vh;
+            background-color: var(--white);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+            overflow-y: auto;
+            z-index: 50;
+        }
+
+        .sidebar h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background-color: var(--background);
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            background-color: var(--white);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        /* Cards */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text);
+        }
+
+        /* Buttons */
+        .button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: none;
+            outline: none;
+            margin-right: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .button:last-child {
+            margin-right: 0;
+        }
+
+        .button {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .button:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .button.warning {
+            background-color: var(--warning);
+        }
+
+        .button.success {
+            background-color: var(--success);
+        }
+
+        .button.danger {
+            background-color: var(--accent);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background-color: var(--background);
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Emergency Notifications */
+        .emergency-notification {
+            background-color: var(--accent);
+            color: var(--white);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            animation: emergencyBlink 2s infinite;
+        }
+
+        @keyframes emergencyBlink {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-active {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background-color: #fef9c3;
+            color: #854d0e;
+        }
+
+        .status-completed {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: color 0.2s ease;
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 0.375rem;
+            background-color: var(--white);
+            transition: border-color 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding: 1.5rem;
+            background-color: var(--white);
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            margin-left: 2rem;
+            border-left: 4px solid var(--primary);
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.5rem;
+            top: 1.5rem;
+            width: 1rem;
+            height: 1rem;
+            background-color: var(--primary);
+            border-radius: 50%;
+            border: 3px solid var(--white);
+            box-shadow: 0 0 0 3px var(--primary);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                margin-bottom: 1rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .modal-content {
+                width: 95%;
+                margin: 1rem;
+            }
+        }
+    </style>
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <div class="sidebar">
+            <h1>Doctor's Dashboard</h1>
+            <div class="nav-item active" data-section="patients">Current Patients</div>
+            <div class="nav-item" data-section="care-plans">Care Plans</div>
+            <div class="nav-item" data-section="treatments">Treatment History</div>
+            <div class="nav-item" data-section="prescriptions">Prescriptions</div>
+            <div class="nav-item" data-section="lab-results">Lab Results</div>
+            <div class="nav-item" data-section="records">Patient Records</div>
+            <div class="nav-item" data-section="schedule">Schedule</div>
+            <div class="nav-item" data-section="emergency">Emergency Center</div>
+        </div>
+
+        <div class="main-content">
+            <!-- Patients Section -->
+            <section id="patients" class="section active">
+                <div class="header">
+                    <h2>Current Patients</h2>
+                    <button class="button" onclick="refreshData('patients')">Refresh List</button>
+                </div>
+                <div class="grid-container" id="patient-list"></div>
+            </section>
+
+            <!-- Care Plans Section -->
+            <section id="care-plans" class="section">
+                <div class="header">
+                    <h2>Care Plan Management</h2>
+                    <button class="button success" onclick="showModal('new-care-plan')">Create New Plan</button>
+                </div>
+                <div class="grid-container" id="care-plans-list"></div>
+            </section>
+
+            <!-- Treatment History Section -->
+            <section id="treatments" class="section">
+                <div class="header">
+                    <h2>Treatment History</h2>
+                    <div>
+                        <select id="patient-select" class="button">
+                            <option value="">Select Patient</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="timeline" id="treatment-timeline"></div>
+            </section>
+
+            <!-- Prescriptions Section -->
+            <section id="prescriptions" class="section">
+                <div class="header">
+                    <h2>Prescription Management</h2>
+                    <button class="button" onclick="showModal('new-prescription')">New Prescription</button>
+                </div>
+                <table id="prescriptions-table">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Medication</th>
+                            <th>Dosage</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+
+            <!-- Lab Results Section -->
+            <section id="lab-results" class="section">
+                <div class="header">
+                    <h2>Lab Results Review</h2>
+                    <button class="button warning" onclick="refreshData('lab-results')">Check New Results</button>
+                </div>
+                <div class="grid-container" id="lab-results-list"></div>
+            </section>
+
+            <!-- Patient Records Section -->
+            <section id="records" class="section">
+                <div class="header">
+                    <h2>Patient Records</h2>
+                    <div>
+                        <input type="text" placeholder="Search records..." id="records-search">
+                    </div>
+                </div>
+                <table id="records-table">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Name</th>
+                            <th>Last Visit</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+
+            <!-- Schedule Section -->
+            <section id="schedule" class="section">
+                <div class="header">
+                    <h2>Schedule Management</h2>
+                    <button class="button success" onclick="showModal('new-appointment')">New Appointment</button>
+                </div>
+                <table id="schedule-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Patient</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+
+            <!-- Emergency Center Section -->
+            <section id="emergency" class="section">
+                <div class="header">
+                    <h2>Emergency Center</h2>
+                    <button class="button danger" onclick="simulateEmergency()">Test Alert System</button>
+                </div>
+                <div id="active-emergencies"></div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="new-care-plan" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hideModal('new-care-plan')">&times;</span>
+            <h2>Create New Care Plan</h2>
+            <form id="care-plan-form">
+                <div class="form-group">
+                    <label>Patient</label>
+                    <select required>
+                        <option value="">Select Patient</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Diagnosis</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Treatment Plan</label>
+                    <textarea required rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Duration</label>
+                    <input type="text" required>
+                </div>
+                <button type="submit" class="button success">Create Plan</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Sample data
+        const sampleData = {
+            patients: [
+                { id: 1, name: "John Doe", age: 45, condition: "Hypertension" },
+                { id: 2, name: "Jane Smith", age: 32, condition: "Diabetes" },
+                { id: 3, name: "Mike Johnson", age: 58, condition: "Arthritis" }
+            ],
+            carePlans: [
+                { id: 1, patientId: 1, diagnosis: "Hypertension", plan: "Daily medication and BP monitoring" },
+                { id: 2, patientId: 2, diagnosis: "Type 2 Diabetes", plan: "Insulin therapy and diet control" }
+            ],
+            treatments: [
+                { id: 1, patientId: 1, date: "2024-12-13", type: "Check-up", notes: "BP stabilizing" },
+                { id: 2, patientId: 1, date: "2024-12-10", type: "Medication adjustment", notes: "Increased dosage" }
+            ],
+            prescriptions: [
+                { id: 1, patientId: 1, medication: "Lisinopril", dosage: "10mg daily", status: "Active" },
+                { id: 2, patientId: 2, medication: "Metformin", dosage: "500mg twice daily", status: "Active" }
+            ],
+            labResults: [
+                { id: 1, patientId: 1, type: "Blood Work", date: "2024-12-12", status: "New" },
+                { id: 2, patientId: 2, type: "A1C Test", date: "2024-12-11", status: "Reviewed" }
+            ],
+            schedule: [
+                { time: "09:00", patient: "John Doe", type: "Follow-up", status: "Scheduled" },
+                { time: "10:30", patient: "Jane Smith", type: "Check-up", status: "In Progress" }
+            ]
+        };
+
+        // Navigation handling
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Update active nav item
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+
+                // Show corresponding section
+                document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+                document.getElementById(item.dataset.section).classList.add('active');
+
+                // Load section data
+                loadSectionData(item.dataset.section);
+            });
+        });
+
+        // Load section data
+        function loadSectionData(section) {
+            switch(section) {
+                case 'patients':
+                    renderPatients();
+                    break;
+                case 'care-plans':
+                    renderCarePlans();
+                    break;
+                case 'treatments':
+                    renderTreatments();
+                    break;
+                case 'prescriptions':
+                    renderPrescriptions();
+                    break;
+                case 'lab-results':
+                renderLabResults();
+                    break;
+                case 'records':
+                    renderRecords();
+                    break;
+                case 'schedule':
+                    renderSchedule();
+                    break;
+                case 'emergency':
+                    renderEmergencyCenter();
+                    break;
+            }
+        }
+
+        // Render functions for each section
+        function renderPatients() {
+            const container = document.getElementById('patient-list');
+            container.innerHTML = sampleData.patients.map(patient => `
+                <div class="card">
+                    <h3>${patient.name}</h3>
+                    <p>Age: ${patient.age}</p>
+                    <p>Condition: ${patient.condition}</p>
+                    <div style="margin-top: 10px;">
+                        <button class="button" onclick="viewPatientDetails(${patient.id})">View Details</button>
+                        <button class="button warning" onclick="showModal('new-care-plan', ${patient.id})">Create Care Plan</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderCarePlans() {
+            const container = document.getElementById('care-plans-list');
+            container.innerHTML = sampleData.carePlans.map(plan => {
+                const patient = sampleData.patients.find(p => p.id === plan.patientId);
+                return `
+                    <div class="card">
+                        <h3>${patient.name}</h3>
+                        <p><strong>Diagnosis:</strong> ${plan.diagnosis}</p>
+                        <p><strong>Plan:</strong> ${plan.plan}</p>
+                        <div style="margin-top: 10px;">
+                            <button class="button" onclick="editCarePlan(${plan.id})">Edit Plan</button>
+                            <button class="button warning" onclick="reviewCarePlan(${plan.id})">Review Progress</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderTreatments() {
+            const timeline = document.getElementById('treatment-timeline');
+            timeline.innerHTML = sampleData.treatments.map(treatment => `
+                <div class="timeline-item">
+                    <h4>${treatment.date}</h4>
+                    <p><strong>Type:</strong> ${treatment.type}</p>
+                    <p><strong>Notes:</strong> ${treatment.notes}</p>
+                </div>
+            `).join('');
+        }
+
+        function renderPrescriptions() {
+            const tbody = document.querySelector('#prescriptions-table tbody');
+            tbody.innerHTML = sampleData.prescriptions.map(prescription => {
+                const patient = sampleData.patients.find(p => p.id === prescription.patientId);
+                return `
+                    <tr>
+                        <td>${patient.name}</td>
+                        <td>${prescription.medication}</td>
+                        <td>${prescription.dosage}</td>
+                        <td><span class="status-badge status-${prescription.status.toLowerCase()}">${prescription.status}</span></td>
+                        <td>
+                            <button class="button" onclick="editPrescription(${prescription.id})">Edit</button>
+                            <button class="button warning" onclick="renewPrescription(${prescription.id})">Renew</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderLabResults() {
+            const container = document.getElementById('lab-results-list');
+            container.innerHTML = sampleData.labResults.map(result => {
+                const patient = sampleData.patients.find(p => p.id === result.patientId);
+                return `
+                    <div class="card">
+                        <h3>${patient.name}</h3>
+                        <p><strong>Test:</strong> ${result.type}</p>
+                        <p><strong>Date:</strong> ${result.date}</p>
+                        <p><strong>Status:</strong> ${result.status}</p>
+                        <button class="button" onclick="viewLabResult(${result.id})">View Results</button>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderRecords() {
+            const tbody = document.querySelector('#records-table tbody');
+            tbody.innerHTML = sampleData.patients.map(patient => `
+                <tr>
+                    <td>${patient.id}</td>
+                    <td>${patient.name}</td>
+                    <td>${getLastVisit(patient.id)}</td>
+                    <td><span class="status-badge status-active">Active</span></td>
+                    <td>
+                        <button class="button" onclick="viewFullRecord(${patient.id})">View Record</button>
+                        <button class="button warning" onclick="downloadRecord(${patient.id})">Download</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderSchedule() {
+            const tbody = document.querySelector('#schedule-table tbody');
+            tbody.innerHTML = sampleData.schedule.map((appointment, index) => `
+                <tr>
+                    <td>${appointment.time}</td>
+                    <td>${appointment.patient}</td>
+                    <td>${appointment.type}</td>
+                    <td><span class="status-badge status-${appointment.status.toLowerCase().replace(' ', '-')}">${appointment.status}</span></td>
+                    <td>
+                        <button class="button" onclick="editAppointment(${index})">Edit</button>
+                        <button class="button warning" onclick="cancelAppointment(${index})">Cancel</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderEmergencyCenter() {
+            const container = document.getElementById('active-emergencies');
+            container.innerHTML = `
+                <div class="emergency-notification">
+                    <h3>🚨 Active Emergency Alert</h3>
+                    <p>Room 204 - Patient: John Doe</p>
+                    <p>Emergency Type: Cardiac Event</p>
+                    <p>Status: Response Team Dispatched</p>
+                    <button class="button" onclick="respondToEmergency(1)">Mark Responded</button>
+                </div>
+            `;
+        }
+
+        // Utility functions
+        function showModal(modalId, data) {
+            const modal = document.getElementById(modalId);
+            modal.style.display = 'flex';
+            if (data) {
+                // Populate modal with data if provided
+                populateModal(modalId, data);
+            }
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function getLastVisit(patientId) {
+            const treatment = sampleData.treatments.find(t => t.patientId === patientId);
+            return treatment ? treatment.date : 'No visits recorded';
+        }
+
+        function refreshData(section) {
+            // Simulate data refresh
+            console.log(`Refreshing ${section} data...`);
+            loadSectionData(section);
+        }
+
+        // Emergency simulation
+        function simulateEmergency() {
+            const emergencyTypes = ['Cardiac Event', 'Severe Allergic Reaction', 'Critical BP'];
+            const randomType = emergencyTypes[Math.floor(Math.random() * emergencyTypes.length)];
+            const notification = document.createElement('div');
+            notification.className = 'emergency-notification';
+            notification.innerHTML = `
+                <h3>🚨 New Emergency Alert</h3>
+                <p>Emergency Type: ${randomType}</p>
+                <p>Location: Room ${Math.floor(Math.random() * 500) + 100}</p>
+                <button class="button" onclick="this.parentElement.remove()">Acknowledge</button>
+            `;
+            document.getElementById('active-emergencies').prepend(notification);
+        }
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            renderPatients();
+            // Set up real-time updates
+            setInterval(() => {
+                if (Math.random() < 0.1) { // 10% chance of emergency
+                    simulateEmergency();
+                }
+            }, 30000);
+        });
+    </script>
+</body>
+</html>

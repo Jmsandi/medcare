@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Care Plan Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338CA;
+            --secondary: #64748B;
+            --success: #22C55E;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-800: #1F2937;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray-50);
+            color: var(--gray-800);
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        .header {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 1.5rem 0;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .search-section {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .search-box {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .input {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            background: var(--primary);
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn i {
+            font-size: 0.875rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .card-header i {
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--gray-800);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .info-item {
+            padding: 0.75rem;
+            background: var(--gray-50);
+            border-radius: 0.5rem;
+        }
+
+        .info-label {
+            font-size: 0.875rem;
+            color: var(--secondary);
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-weight: 500;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--gray-100);
+        }
+
+        .tab {
+            padding: 0.75rem 1rem;
+            border: none;
+            background: none;
+            font-size: 1rem;
+            color: var(--secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .medication-list, .appointment-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-100);
+            transition: all 0.2s;
+        }
+
+        .list-item:hover {
+            background: var(--gray-50);
+        }
+
+        .list-item-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gray-100);
+            border-radius: 0.5rem;
+            color: var(--primary);
+        }
+
+        .list-item-content {
+            flex: 1;
+        }
+
+        .list-item-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .list-item-subtitle {
+            font-size: 0.875rem;
+            color: var(--secondary);
+        }
+
+        .progress-chart {
+            width: 100%;
+            height: 300px;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--gray-50);
+            border-radius: 0.5rem;
+        }
+
+        .notes-section textarea {
+            width: 100%;
+            height: 120px;
+            padding: 1rem;
+            border: 2px solid var(--gray-200);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            resize: vertical;
+            font-size: 1rem;
+        }
+
+        .notes-section textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        .notes-list {
+            margin-top: 1rem;
+        }
+
+        .note-item {
+            background: var(--gray-50);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .note-timestamp {
+            font-size: 0.75rem;
+            color: var(--secondary);
+            margin-top: 0.5rem;
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--success);
+        }
+
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1>Care Plan Dashboard</h1>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="search-section">
+            <h2>Patient Search</h2>
+            <div class="search-box">
+                <input type="text" class="input" id="patient-search" placeholder="Enter Patient ID or Name">
+                <button class="btn" onclick="searchPatient()">
+                    <i class="fas fa-search"></i>
+                    Search
+                </button>
+            </div>
+            <div id="search-error" class="error-message">Patient not found. Please check the ID and try again.</div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-user"></i>
+                    <h2 class="card-title">Patient Information</h2>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Name</div>
+                        <div class="info-value" id="patient-name">John Doe</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Patient ID</div>
+                        <div class="info-value" id="patient-id">P12345</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Age</div>
+                        <div class="info-value" id="patient-age">45</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Status</div>
+                        <div class="info-value">
+                            <span class="badge badge-success">Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-clipboard-list"></i>
+                    <h2 class="card-title">Treatment Plan</h2>
+                </div>
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('current-plan')">Current Plan</button>
+                    <button class="tab" onclick="switchTab('history-plan')">History</button>
+                </div>
+                <div id="current-plan" class="tab-content active">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Primary Goal</div>
+                            <div class="info-value">Blood Pressure Management</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Target BP</div>
+                            <div class="info-value">120/80 mmHg</div>
+                        </div>
+                    </div>
+                </div>
+                <div id="history-plan" class="tab-content" style="display: none;">
+                    <div class="list-item">
+                        <div class="list-item-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div class="list-item-content">
+                            <div class="list-item-title">Initial Assessment</div>
+                            <div class="list-item-subtitle">Completed on Jan 1, 2024</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-pills"></i>
+                    <h2 class="card-title">Medications</h2>
+                </div>
+                <div class="medication-list" id="medication-list">
+                    <!-- Medications will be added here -->
+                </div>
+                <button class="btn" style="margin-top: 1rem;" onclick="addMedication()">
+                    <i class="fas fa-plus"></i>
+                    Add Medication
+                </button>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-chart-line"></i>
+                    <h2 class="card-title">Progress Tracking</h2>
+                </div>
+                <canvas class="progress-chart" id="progress-chart"></canvas>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-notes-medical"></i>
+                    <h2 class="card-title">Clinical Notes</h2>
+                </div>
+                <div class="notes-section">
+                    <textarea id="notes" placeholder="Add your clinical notes here..."></textarea>
+                    <button class="btn" onclick="saveNotes()">
+                        <i class="fas fa-save"></i>
+                        Save Notes
+                    </button>
+                    <div id="saved-notes" class="notes-list">
+                        <!-- Notes will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced patient database with more fields
+        const patientDatabase = {
+        'P12345': {
+            name: 'John Doe',
+            age: 45,
+            condition: 'Hypertension',
+            status: 'Active',
+            medications: [
+                { name: 'Lisinopril', dose: '10mg', schedule: '8:00 AM', priority: 'high' },
+                { name: 'Amlodipine', dose: '5mg', schedule: '8:00 PM', priority: 'high' },
+                { name: 'Aspirin', dose: '81mg', schedule: '12:00 PM', priority: 'medium' }
+            ]
+        },
+        'P12346': {
+            name: 'Jane Smith',
+            age: 52,
+            condition: 'Diabetes Type 2',
+            status: 'Active',
+            medications: [
+                { name: 'Metformin', dose: '1000mg', schedule: '8:00 AM', priority: 'high' },
+                { name: 'Glipizide', dose: '5mg', schedule: '8:00 PM', priority: 'high' }
+            ]
+        }
+    };
+
+    // Progress data for the chart
+    const progressData = {
+        labels: ['Jan 1', 'Jan 2', 'Jan 3', 'Jan 4', 'Jan 5', 'Jan 6', 'Jan 7'],
+        systolic: [130, 128, 125, 127, 122, 120, 118],
+        diastolic: [85, 83, 82, 84, 80, 79, 78]
+    };
+
+    // Function to search for a patient
+    function searchPatient() {
+        const searchId = document.getElementById('patient-search').value;
+        const errorMessage = document.getElementById('search-error');
+        
+        if (patientDatabase[searchId]) {
+            const patient = patientDatabase[searchId];
+            updatePatientInfo(patient, searchId);
+            updateMedicationList(patient.medications);
+            initProgressChart();
+            errorMessage.style.display = 'none';
+        } else {
+            errorMessage.style.display = 'block';
+        }
+    }
+
+    // Function to update patient information
+    function updatePatientInfo(patient, id) {
+        document.getElementById('patient-name').textContent = patient.name;
+        document.getElementById('patient-id').textContent = id;
+        document.getElementById('patient-age').textContent = patient.age;
+    }
+
+    // Function to update medication list
+    function updateMedicationList(medications) {
+        const medicationList = document.getElementById('medication-list');
+        medicationList.innerHTML = '';
+        
+        medications.forEach(med => {
+            const listItem = document.createElement('div');
+            listItem.className = 'list-item';
+            
+            const priorityClass = med.priority === 'high' ? 'badge-danger' : 'badge-warning';
+            
+            listItem.innerHTML = `
+                <div class="list-item-icon">
+                    <i class="fas fa-pills"></i>
+                </div>
+                <div class="list-item-content">
+                    <div class="list-item-title">${med.name} - ${med.dose}</div>
+                    <div class="list-item-subtitle">${med.schedule}</div>
+                </div>
+                <span class="badge ${priorityClass}">${med.priority}</span>
+            `;
+            
+            medicationList.appendChild(listItem);
+        });
+    }
+
+    // Function to add new medication
+    function addMedication() {
+        const medicationForm = `
+            <div class="info-grid" style="margin-bottom: 1rem;">
+                <input type="text" class="input" id="med-name" placeholder="Medication Name">
+                <input type="text" class="input" id="med-dose" placeholder="Dose">
+                <input type="text" class="input" id="med-schedule" placeholder="Schedule">
+                <select class="input" id="med-priority">
+                    <option value="high">High Priority</option>
+                    <option value="medium">Medium Priority</option>
+                    <option value="low">Low Priority</option>
+                </select>
+            </div>
+        `;
+
+        const result = confirm("Add new medication?\n" + medicationForm);
+        
+        if (result) {
+            const newMed = {
+                name: document.getElementById('med-name').value,
+                dose: document.getElementById('med-dose').value,
+                schedule: document.getElementById('med-schedule').value,
+                priority: document.getElementById('med-priority').value
+            };
+            
+            const searchId = document.getElementById('patient-search').value;
+            if (patientDatabase[searchId]) {
+                patientDatabase[searchId].medications.push(newMed);
+                updateMedicationList(patientDatabase[searchId].medications);
+            }
+        }
+    }
+
+    // Function to switch tabs
+    function switchTab(tabId) {
+        const tabContainer = document.querySelector(`#${tabId}`).parentElement;
+        const tabs = tabContainer.querySelectorAll('.tab');
+        const contents = tabContainer.querySelectorAll('.tab-content');
+        
+        tabs.forEach(tab => tab.classList.remove('active'));
+        contents.forEach(content => {
+            content.style.display = 'none';
+            content.classList.remove('active');
+        });
+        
+        const selectedTab = tabContainer.querySelector(`button[onclick="switchTab('${tabId}')"]`);
+        const selectedContent = document.getElementById(tabId);
+        
+        selectedTab.classList.add('active');
+        selectedContent.style.display = 'block';
+        selectedContent.classList.add('active');
+    }
+
+    // Function to save notes
+    function saveNotes() {
+        const notesText = document.getElementById('notes').value;
+        const savedNotes = document.getElementById('saved-notes');
+        
+        if (notesText.trim()) {
+            const noteItem = document.createElement('div');
+            noteItem.className = 'note-item';
+            
+            noteItem.innerHTML = `
+                <div>${notesText}</div>
+                <div class="note-timestamp">
+                    <i class="fas fa-clock"></i>
+                    ${new Date().toLocaleString()}
+                </div>
+            `;
+            
+            savedNotes.insertBefore(noteItem, savedNotes.firstChild);
+            document.getElementById('notes').value = '';
+        }
+    }
+
+    // Function to initialize progress chart
+    function initProgressChart() {
+        const ctx = document.getElementById('progress-chart').getContext('2d');
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+        
+        const width = ctx.canvas.width;
+        const height = ctx.canvas.height;
+        const padding = 40;
+        const dataPoints = progressData.systolic.length;
+        
+        // Draw axes
+        ctx.beginPath();
+        ctx.strokeStyle = '#64748B';
+        ctx.moveTo(padding, padding);
+        ctx.lineTo(padding, height - padding);
+        ctx.lineTo(width - padding, height - padding);
+        ctx.stroke();
+        
+        // Plot systolic line
+        const xStep = (width - 2 * padding) / (dataPoints - 1);
+        const yScale = (height - 2 * padding) / 50;  // Assuming max range of 50 mmHg
+        
+        ctx.beginPath();
+        ctx.strokeStyle = '#4F46E5';
+        ctx.lineWidth = 2;
+        
+        progressData.systolic.forEach((value, index) => {
+            const x = padding + (index * xStep);
+            const y = height - padding - ((value - 90) * yScale);
+            
+            if (index === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        });
+        ctx.stroke();
+        
+        // Add labels
+        ctx.font = '12px Arial';
+        ctx.fillStyle = '#64748B';
+        progressData.labels.forEach((label, index) => {
+            const x = padding + (index * xStep);
+            ctx.fillText(label, x - 20, height - padding + 20);
+        });
+    }
+
+    // Initialize the dashboard
+    window.onload = function() {
+        // Load default patient
+        const defaultPatient = patientDatabase['P12345'];
+        updatePatientInfo(defaultPatient, 'P12345');
+        updateMedicationList(defaultPatient.medications);
+        initProgressChart();
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Central Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="logo">Organization Central</div>
+            <ul>
+                <li class="active">Hospital Network Overview</li>
+                <li>Resource Allocation</li>
+                <li>Staff Management</li>
+                <li>Policy Management</li>
+                <li>Network-wide Reports</li>
+                <li>Emergency Protocols</li>
+                <li>Budget Management</li>
+                <li>Inventory Tracking</li>
+            </ul>
+        </div>
+
+        <div class="main-content">
+            <div class="view" id="network-overview">
+                <div class="grid-dashboard">
+                    <div class="card">
+                        <div class="card-header">Total Facilities</div>
+                        <div class="stat">12</div>
+                        <div class="subtitle">4 Major Hospitals</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Total Staff</div>
+                        <div class="stat">4,856</div>
+                        <div class="subtitle">92% Occupancy Rate</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Network Capacity</div>
+                        <div class="stat">2,450</div>
+                        <div class="subtitle">Total Bed Capacity</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Budget Status</div>
+                        <div class="stat">$24.5M</div>
+                        <div class="subtitle">Q4 Budget Remaining</div>
+                    </div>
+                </div>
+
+                <div class="charts-container">
+                    <div class="card">
+                        <div class="card-header">Resource Distribution</div>
+                        <div id="resourceChart" style="height: 300px;"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">Staff Allocation</div>
+                        <div id="staffChart" style="height: 300px;"></div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Facility Status Overview</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Facility Name</th>
+                                <th>Capacity Status</th>
+                                <th>Emergency Status</th>
+                                <th>Resource Level</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Central Hospital</td>
+                                <td><span class="status-badge status-warning">85% Full</span></td>
+                                <td>Code Green</td>
+                                <td><span class="status-badge status-good">Optimal</span></td>
+                            </tr>
+                            <tr>
+                                <td>West Wing Medical</td>
+                                <td><span class="status-badge status-critical">92% Full</span></td>
+                                <td>Code Yellow</td>
+                                <td><span class="status-badge status-warning">Monitor</span></td>
+                            </tr>
+                            <tr>
+                                <td>East Medical Center</td>
+                                <td><span class="status-badge status-good">72% Full</span></td>
+                                <td>Code Green</td>
+                                <td><span class="status-badge status-good">Optimal</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Resource Allocation View -->
+    <div class="view" id="resource-allocation">
+        <div class="header">
+            <h1>Resource Allocation</h1>
+        </div>
+        
+        <div class="grid-dashboard">
+            <div class="card">
+                <div class="card-header">Medical Equipment</div>
+                <div class="stat">842</div>
+                <div class="subtitle">Units Deployed</div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: 75%"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">ICU Beds</div>
+                <div class="stat">124/150</div>
+                <div class="subtitle">Currently Occupied</div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: 82%"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">Operating Rooms</div>
+                <div class="stat">18/20</div>
+                <div class="subtitle">In Use</div>
+                <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width: 90%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+            <!-- Staff Management View -->
+            <div class="view" id="staff-management">
+                <div class="header">
+                    <h1>Staff Management</h1>
+                </div>
+                
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header">Staff Distribution</div>
+                        <div class="resource-item">
+                            <span>Doctors</span>
+                            <span class="tag tag-blue">486</span>
+                        </div>
+                        <div class="resource-item">
+                            <span>Nurses</span>
+                            <span class="tag tag-blue">1,245</span>
+                        </div>
+                        <div class="resource-item">
+                            <span>Support Staff</span>
+                            <span class="tag tag-blue">892</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">Shift Coverage</div>
+                        <div class="resource-item">
+                            <span>Morning</span>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div class="resource-item">
+                            <span>Afternoon</span>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="resource-item">
+                            <span>Night</span>
+                            <div class="progress-bar">
+                                <div class="progress-bar-fill" style="width: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Policy Management View -->
+            <div class="view" id="policy-management">
+                <div class="header">
+                    <h1>Policy Management</h1>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Active Policies</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Policy Name</th>
+                                <th>Last Updated</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>COVID-19 Protocol</td>
+                                <td>2024-03-15</td>
+                                <td><span class="status-badge status-good">Active</span></td>
+                                <td><button class="action-button">View Details</button></td>
+                            </tr>
+                            <tr>
+                                <td>Patient Data Security</td>
+                                <td>2024-02-28</td>
+                                <td><span class="status-badge status-good">Active</span></td>
+                                <td><button class="action-button">View Details</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Add Network-wide Reports View -->
+        <div class="view" id="network-wide-reports">
+            <div class="header">
+                <h1>Network-wide Reports</h1>
+            </div>
+
+            <div class="report-filters">
+                <select class="filter-select">
+                    <option>All Facilities</option>
+                    <option>Central Hospital</option>
+                    <option>West Wing Medical</option>
+                    <option>East Medical Center</option>
+                </select>
+
+                <select class="filter-select">
+                    <option>Last 30 Days</option>
+                    <option>Last Quarter</option>
+                    <option>Last Year</option>
+                    <option>Custom Range</option>
+                </select>
+
+                <select class="filter-select">
+                    <option>All Departments</option>
+                    <option>Emergency</option>
+                    <option>Surgery</option>
+                    <option>ICU</option>
+                    <option>Pediatrics</option>
+                </select>
+            </div>
+
+            <div class="report-tabs">
+                <button class="report-tab active">Performance Metrics</button>
+                <button class="report-tab">Clinical Outcomes</button>
+                <button class="report-tab">Resource Utilization</button>
+                <button class="report-tab">Financial Reports</button>
+            </div>
+
+            <div class="report-grid">
+                <div class="card">
+                    <div class="report-header">
+                        <h3>Patient Care Metrics</h3>
+                        <button class="action-button">Download Report</button>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-item">
+                            <div class="kpi-value">94.2%</div>
+                            <div class="kpi-label">Patient Satisfaction</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">4.2d</div>
+                            <div class="kpi-label">Avg Length of Stay</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">23min</div>
+                            <div class="kpi-label">Wait Time</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="report-header">
+                        <h3>Clinical Outcomes</h3>
+                        <button class="action-button">Download Report</button>
+                    </div>
+                    <div class="kpi-grid">
+                        <div class="kpi-item">
+                            <div class="kpi-value">98.5%</div>
+                            <div class="kpi-label">Recovery Rate</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">0.8%</div>
+                            <div class="kpi-label">Readmission Rate</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">99.2%</div>
+                            <div class="kpi-label">Safety Compliance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Available Reports</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Report Name</th>
+                            <th>Last Generated</th>
+                            <th>Frequency</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Quality Measures Report</td>
+                            <td>Today 09:00 AM</td>
+                            <td>Daily</td>
+                            <td><span class="status-badge status-good">Available</span></td>
+                            <td><button class="action-button">Download</button></td>
+                        </tr>
+                        <tr>
+                            <td>Resource Utilization Report</td>
+                            <td>Yesterday</td>
+                            <td>Weekly</td>
+                            <td><span class="status-badge status-good">Available</span></td>
+                            <td><button class="action-button">Download</button></td>
+                        </tr>
+                        <tr>
+                            <td>Financial Performance Report</td>
+                            <td>2024-03-01</td>
+                            <td>Monthly</td>
+                            <td><span class="status-badge status-good">Available</span></td>
+                            <td><button class="action-button">Download</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div> <!-- Close network-wide-reports view -->
+
+            <!-- Emergency Protocols View -->
+            <div class="view" id="emergency-protocols">
+                <div class="header">
+                    <h1>Emergency Protocols</h1>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <strong>Active Protocol:</strong> Mass Casualty Incident Protocol - Level 2
+                </div>
+                
+                <div class="grid-dashboard">
+                    <div class="card">
+                        <div class="card-header">Emergency Response Teams</div>
+                        <div class="stat">12/15</div>
+                        <div class="subtitle">Teams Available</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">Critical Resources</div>
+                        <div class="stat">95%</div>
+                        <div class="subtitle">Readiness Level</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Budget Management View -->
+            <div class="view" id="budget-management">
+                <div class="header">
+                    <h1>Budget Management</h1>
+                </div>
+                
+                <div class="grid-3">
+                    <div class="card">
+                        <div class="card-header">Annual Budget Overview</div>
+                        <div class="stat">$125M</div>
+                        <div class="subtitle">Total Budget</div>
+                        <div class="mini-chart"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">Department Allocation</div>
+                        <div class="resource-item">
+                            <span>Emergency</span>
+                            <span class="tag tag-blue">$28M</span>
+                        </div>
+                        <div class="resource-item">
+                            <span>Surgery</span>
+                            <span class="tag tag-blue">$35M</span>
+                        </div>
+                        <div class="resource-item">
+                            <span>ICU</span>
+                            <span class="tag tag-blue">$42M</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inventory Tracking View -->
+            <div class="view" id="inventory-tracking">
+                <div class="header">
+                    <h1>Inventory Tracking</h1>
+                </div>
+                
+                <div class="alert alert-danger">
+                    <strong>Low Stock Alert:</strong> Critical supplies in ICU department
+                </div>
+                
+                <div class="grid-dashboard">
+                    <div class="card">
+                        <div class="card-header">Medical Supplies</div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Current Stock</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>N95 Masks</td>
+                                    <td>15,000</td>
+                                    <td><span class="status-badge status-good">Optimal</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Surgical Gloves</td>
+                                    <td>5,000</td>
+                                    <td><span class="status-badge status-warning">Low</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- Close main-content -->
+    </div> <!-- Close container -->
+
+    <script>
+        // Initialize views mapping
+document.addEventListener('DOMContentLoaded', () => {
+    // Update views mapping to exactly match sidebar text and IDs
+    const views = {
+        'Hospital Network Overview': 'network-overview',
+        'Resource Allocation': 'resource-allocation', 
+        'Staff Management': 'staff-management',
+        'Policy Management': 'policy-management',
+        'Network-wide Reports': 'network-wide-reports',
+        'Emergency Protocols': 'emergency-protocols',
+        'Budget Management': 'budget-management',
+        'Inventory Tracking': 'inventory-tracking'
+    };
+
+    // First remove any hardcoded display:none styles
+    document.querySelectorAll('.view').forEach(view => {
+        view.removeAttribute('style');
+    });
+
+    // Show default view and hide others
+    const defaultView = 'network-overview';
+    Object.values(views).forEach(viewId => {
+        const view = document.getElementById(viewId);
+        if (view) {
+            view.style.display = viewId === defaultView ? 'block' : 'none';
+        }
+    });
+
+    // Setup sidebar navigation
+    const sidebarItems = document.querySelectorAll('.sidebar li');
+    sidebarItems.forEach(item => {
+        item.addEventListener('click', () => {
+            // Update sidebar item styling
+            sidebarItems.forEach(i => {
+                i.classList.remove('active');
+            });
+            item.classList.add('active');
+
+            // Hide all views
+            document.querySelectorAll('.view').forEach(view => {
+                view.style.display = 'none';
+            });
+
+            // Show selected view
+            const viewId = views[item.textContent.trim()];
+            const selectedView = document.getElementById(viewId);
+            if (selectedView) {
+                selectedView.style.display = 'block';
+            } else {
+                console.error(`View not found: ${viewId}`);
+            }
+        });
+    });
+
+    // Initialize first item as active
+    sidebarItems[0].classList.add('active');
+
+    // Reports tab functionality
+    document.querySelectorAll('.report-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.report-tab').forEach(t => 
+                t.classList.remove('active'));
+            tab.classList.add('active');
+        });
+    });
+});
+    </script>
+</body>
+</html>

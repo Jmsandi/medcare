@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>District Health Dashboard</title>
+    <style>
+        /* Core styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f5f7fb;
+            color: #333;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            background: #2c3e50;
+            color: white;
+            padding: 2rem;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+        }
+
+        .nav-menu li {
+            padding: 0.75rem 0;
+        }
+
+        .nav-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Main content styles */
+        .main-content {
+            padding: 2rem;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: #2c3e50;
+        }
+
+        /* Grid dashboard styles */
+        .grid-dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            font-weight: 600;
+            color: #7f8c8d;
+            margin-bottom: 1rem;
+        }
+
+        .stat {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #95a5a6;
+            font-size: 0.9rem;
+        }
+
+        /* Table styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+        }
+
+        .status-active {
+            background: #e1f7e1;
+            color: #27ae60;
+        }
+
+        .status-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-critical {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Charts container */
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart {
+            min-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                District Health Admin
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#">Dashboard</a></li>
+                <li><a href="#">Health Metrics</a></li>
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Staff Management</a></li>
+                <li><a href="#">Budget</a></li>
+                <li><a href="#">Facilities</a></li>
+                <li><a href="#">Emergency Response</a></li>
+                <li><a href="#">Supply Chain</a></li>
+                <li><a href="#">Reports</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="header">
+                <h1>District Health Dashboard</h1>
+            </div>
+
+            <div class="grid-dashboard">
+                <div class="card">
+                    <div class="card-header">Active Healthcare Facilities</div>
+                    <div class="stat">24</div>
+                    <div class="subtitle">2 under maintenance</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Medical Staff</div>
+                    <div class="stat">342</div>
+                    <div class="subtitle">92% attendance rate</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Budget Utilization</div>
+                    <div class="stat">78%</div>
+                    <div class="subtitle">₹3.2Cr remaining</div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Emergency Response Time</div>
+                    <div class="stat">12.4</div>
+                    <div class="subtitle">minutes (avg)</div>
+                </div>
+            </div>
+
+            <div class="charts-container">
+                <div class="card">
+                    <div class="card-header">Resource Distribution</div>
+                    <div class="chart" id="resourceChart"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">Staff Allocation by Facility</div>
+                    <div class="chart" id="staffChart"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Facility Status Overview</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Facility Name</th>
+                            <th>Type</th>
+                            <th>Occupancy</th>
+                            <th>Supply Status</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Central Hospital</td>
+                            <td>Primary Care</td>
+                            <td>75%</td>
+                            <td>Adequate</td>
+                            <td><span class="status-badge status-active">Operational</span></td>
+                        </tr>
+                        <tr>
+                            <td>East Wing Clinic</td>
+                            <td>Specialty Care</td>
+                            <td>92%</td>
+                            <td>Low on supplies</td>
+                            <td><span class="status-badge status-warning">At Capacity</span></td>
+                        </tr>
+                        <tr>
+                            <td>South Community Center</td>
+                            <td>Preventive Care</td>
+                            <td>45%</td>
+                            <td>Critical supplies needed</td>
+                            <td><span class="status-badge status-critical">Supply Shortage</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script>
+        // Sample charts using Chart.js
+        const resourceChart = new Chart(
+            document.getElementById('resourceChart').getContext('2d'),
+            {
+                type: 'doughnut',
+                data: {
+                    labels: ['Medical Equipment', 'Medicines', 'Staff Resources', 'Infrastructure'],
+                    datasets: [{
+                        data: [35, 25, 25, 15],
+                        backgroundColor: [
+                            '#2ecc71',
+                            '#3498db',
+                            '#e74c3c',
+                            '#f1c40f'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            }
+        );
+
+        const staffChart = new Chart(
+            document.getElementById('staffChart').getContext('2d'),
+            {
+                type: 'bar',
+                data: {
+                    labels: ['Central', 'East', 'West', 'North', 'South'],
+                    datasets: [{
+                        label: 'Medical Staff',
+                        data: [65, 45, 38, 24, 33],
+                        backgroundColor: '#3498db'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            }
+        );
+    </script>
+</body>
+</html>

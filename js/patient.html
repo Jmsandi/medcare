@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Patient Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: -250px;
+            top: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #34495e;
+            padding-top: 60px;
+            transition: 0.3s;
+            z-index: 99;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 15px 25px;
+            color: white;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #2c3e50;
+        }
+
+        .main-content {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn {
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-secondary {
+            background-color: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+
+        .btn-danger {
+            background-color: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-left: 10px;
+        }
+
+        .status.pending {
+            background-color: #f1c40f;
+            color: #fff;
+        }
+
+        .status.completed {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .calendar {
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day {
+            padding: 5px;
+            text-align: center;
+            border: 1px solid #ecf0f1;
+            cursor: pointer;
+        }
+
+        .calendar-day:hover {
+            background-color: #f5f5f5;
+        }
+
+        .calendar-day.selected {
+            background-color: #3498db;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 10px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <button class="menu-btn">☰</button>
+        <h1>Patient Portal</h1>
+        <div class="user-info">John Doe</div>
+    </header>
+
+    <nav class="sidebar">
+        <a href="#" data-page="dashboard">Dashboard</a>
+        <a href="#" data-page="personal">Personal Information</a>
+        <a href="#" data-page="appointments">Appointments</a>
+        <a href="#" data-page="history">Medical History</a>
+        <a href="#" data-page="results">Test Results</a>
+        <a href="#" data-page="prescriptions">Prescriptions</a>
+        <a href="#" data-page="care-plan">Care Plan</a>
+        <a href="#" data-page="messages">Doctor Communications</a>
+    </nav>
+
+    <main class="main-content">
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="grid">
+                <div class="card">
+                    <h3>Quick Actions</h3>
+                    <button class="btn" onclick="showPage('appointments')">Book Appointment</button>
+                    <button class="btn" onclick="showPage('prescriptions')">Request Refill</button>
+                    <button class="btn" onclick="showPage('messages')">Message Doctor</button>
+                </div>
+                <div class="card">
+                    <h3>Upcoming Appointments</h3>
+                    <div>Dr. Smith - Dec 20, 2024</div>
+                    <div>Dr. Johnson - Dec 28, 2024</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personal Information Page -->
+        <div id="personal" class="page">
+            <div class="card">
+                <h2>Personal Information</h2>
+                <form id="personalForm">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="form-control" value="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Date of Birth</label>
+                        <input type="date" class="form-control" value="1980-01-01">
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" class="form-control" value="123 Medical Ave">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" class="form-control" value="(555) 123-4567">
+                    </div>
+                    <div class="form-group">
+                        <label>Emergency Contact</label>
+                        <input type="text" class="form-control" value="Jane Doe">
+                    </div>
+                    <button type="submit" class="btn">Save Changes</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Appointments Page -->
+        <div id="appointments" class="page">
+            <div class="card">
+            <h2>Book Appointment</h2>
+            <div class="calendar"></div>
+                <div class="calendar-header">
+                <button class="btn btn-secondary">←</button>
+                <h3>December 2024</h3>
+                <button class="btn btn-secondary">→</button>
+                </div>
+                <div class="calendar-grid">
+                <!-- Calendar days would be generated by JavaScript -->
+                </div>
+            </div>
+            <button class="btn" onclick="showModal('appointmentModal')">Book New Appointment</button>
+            </div>
+            <div class="card">
+            
+            </div>
+        </div>
+
+        <!-- Additional pages would follow the same pattern -->
+    <!-- Medical History Page -->
+    <div id="history" class="page">
+        <div class="card">
+            <h2>Medical History</h2>
+            <div class="form-group">
+                <label>Allergies</label>
+                <textarea class="form-control" readonly>Penicillin</textarea>
+            </div>
+            <div class="form-group">
+                <label>Chronic Conditions</label>
+                <textarea class="form-control" readonly>None</textarea>
+            </div>
+            <div class="form-group">
+                <label>Past Surgeries</label>
+                <textarea class="form-control" readonly>Appendectomy (2018)</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Results Page -->
+    <div id="results" class="page">
+        <div class="card">
+            <h2>Recent Test Results</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Blood Work</h3>
+                    <p>Date: Nov 15, 2024</p>
+                    <button class="btn">View Results</button>
+                </div>
+                <div class="card">
+                    <h3>X-Ray</h3>
+                    <p>Date: Oct 30, 2024</p>
+                    <button class="btn">View Results</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Prescriptions Page -->
+    <div id="prescriptions" class="page">
+        <div class="card">
+            <h2>Current Prescriptions</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>Lisinopril</h3>
+                    <p>10mg daily</p>
+                    <p>Refills: 2</p>
+                    <button class="btn">Request Refill</button>
+                </div>
+                <div class="card">
+                    <h3>Metformin</h3>
+                    <p>500mg twice daily</p>
+                    <p>Refills: 3</p>
+                    <button class="btn">Request Refill</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Care Plan Page -->
+    <div id="care-plan" class="page">
+        <div class="card">
+            <h2>Care Plan</h2>
+            <div class="form-group">
+                <label>Treatment Goals</label>
+                <textarea class="form-control" readonly>1. Maintain blood pressure below 130/80
+    2. Exercise 30 minutes daily
+    3. Follow low-sodium diet</textarea>
+            </div>
+            <div class="form-group">
+                <label>Next Steps</label>
+                <textarea class="form-control" readonly>Schedule follow-up appointment in 3 months</textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Messages Page -->
+    <div id="messages" class="page">
+        <div class="card">
+            <h2>Doctor Communications</h2>
+            <div class="message-composer"></div>
+                <label>New Message</label>
+                <textarea class="form-control"></textarea>
+            </div>
+            <button class="btn">Send Message</button>
+            <hr>
+            <h3>Message History</h3>
+            <div class="message">
+                <p><strong>Dr. Smith</strong> - Nov 30, 2024</p>
+                <p>Your latest test results look good. Keep up the good work!</p>
+            </div>
+        </div>
+    </div>
+    <!-- Messages Section with Modern Style -->
+    <div id="messages" class="page">
+        <div class="card">
+            <h2>Doctor Communications</h2>
+            <div class="message-composer">
+                <div class="form-group">
+                    <textarea class="form-control message-input" placeholder="Type your message here..."></textarea>
+                </div>
+                <button class="btn btn-send">
+                    <i class="fas fa-paper-plane"></i> Send
+                </button>
+            </div>
+            
+            <div class="message-history">
+                <h3>Recent Messages</h3>
+                <div class="message-thread">
+                    <div class="message received">
+                        <div class="message-avatar">
+                            <img src="https://via.placeholder.com/40" alt="Dr. Smith">
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="sender">Dr. Smith</span>
+                                <span class="timestamp">2:30 PM</span>
+                            </div>
+                            <p>Your latest test results look good. Keep up the great work!</p>
+                        </div>
+                    </div>
+
+                    <div class="message sent">
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="sender">You</span>
+                                <span class="timestamp">2:35 PM</span>
+                            </div>
+                            <p>Thank you, Dr. Smith. I've been following the diet plan as discussed.</p>
+                        </div>
+                    </div>
+
+                    <div class="message received">
+                        <div class="message-avatar">
+                            <img src="https://via.placeholder.com/40" alt="Dr. Smith">
+                        </div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="sender">Dr. Smith</span>
+                                <span class="timestamp">2:40 PM</span>
+                            </div>
+                            <p>Excellent! Let's schedule a follow-up appointment next month.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .message-composer {
+                margin-bottom: 2rem;
+                background: #f8f9fa;
+                padding: 1rem;
+                border-radius: 8px;
+            }
+
+            .message-input {
+                min-height: 100px;
+                resize: none;
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .btn-send {
+                background-color: #2196f3;
+                margin-top: 1rem;
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+            }
+
+            .message-history {
+                padding-top: 1rem;
+                border-top: 1px solid #eee;
+            }
+
+            .message-thread {
+                display: flex;
+                flex-direction: column;
+                gap: 1.5rem;
+                margin-top: 1rem;
+            }
+
+            .message {
+                display: flex;
+                gap: 1rem;
+                max-width: 80%;
+            }
+
+            .message.sent {
+                margin-left: auto;
+                flex-direction: row-reverse;
+            }
+
+            .message-avatar img {
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+            }
+
+            .message-content {
+                background: #fff;
+                padding: 1rem;
+                border-radius: 12px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+
+            .message.sent .message-content {
+                background: #e3f2fd;
+            }
+
+            .message-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            .sender {
+                font-weight: bold;
+                color: #2196f3;
+            }
+
+            .timestamp {
+                color: #757575;
+                font-size: 0.8rem;
+            }
+
+            .message p {
+                margin: 0;
+                line-height: 1.4;
+                color: #333;
+            }
+        </style>
+    </div>
+    </main>
+
+    <!-- Modals -->
+    <div id="appointmentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Book Appointment</h2>
+                <button class="close-btn" onclick="hideModal('appointmentModal')">×</button>
+            </div>
+            <form id="appointmentForm">
+                <div class="form-group">
+                    <label>Doctor</label>
+                    <select class="form-control">
+                        <option>Dr. Smith - General Practice</option>
+                        <option>Dr. Johnson - Cardiology</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <select class="form-control">
+                        <option>9:00 AM</option>
+                        <option>10:00 AM</option>
+                        <option>11:00 AM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Reason for Visit</label>
+                    <textarea class="form-control"></textarea>
+                </div>
+                <button type="submit" class="btn">Book Appointment</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        const menuBtn = document.querySelector('.menu-btn');
+        const sidebar = document.querySelector('.sidebar');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+
+        // Page navigation
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(pageId).classList.add('active');
+            sidebar.classList.remove('active');
+        }
+
+        // Handle navigation links
+        document.querySelectorAll('.sidebar a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const pageId = link.getAttribute('data-page');
+                showPage(pageId);
+            });
+        });
+
+        // Modal functions
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                alert('Form submitted! This would be processed by the backend in a real application.');
+            });
+        });
+
+        // Calendar functionality
+        function generateCalendar() {
+            const calendarGrid = document.querySelector('.calendar-grid');
+            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            
+            // Add day headers
+            days.forEach(day => {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                calendarGrid.appendChild(dayElement);
+            });
+
+            // Add calendar days (simplified)
+            for (let i = 1; i <= 31; i++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = i;
+                dayElement.addEventListener('click', () => {
+                    document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                    dayElement.classList.add('selected');
+                });
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        // Initialize calendar
+        generateCalendar();
+    </script>
+</body>
+</html>

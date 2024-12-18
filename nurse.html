@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nurse's Interface</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f2f5;
+        }
+
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .task-list {
+            list-style: none;
+        }
+
+        .task-list li {
+            padding: 0.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .emergency {
+            background-color: #ff4444;
+            color: white;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: white;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+
+        .status-urgent {
+            background-color: #ff4444;
+        }
+
+        .status-normal {
+            background-color: #2ecc71;
+        }
+
+        #vitalsChart {
+            width: 100%;
+            height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>Nurse's Interface</h1>
+        <span id="currentTime"></span>
+    </header>
+
+    <div class="container">
+        <div id="emergencyAlert" class="emergency">
+            Emergency Alert: Patient in Room 203 needs immediate attention!
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h2>Patient Care Tasks</h2>
+                <ul class="task-list" id="patientTasks">
+                    <li>
+                        <span><span class="status-indicator status-urgent"></span>Check vitals - Room 201</span>
+                        <button class="btn">Complete</button>
+                    </li>
+                    <li>
+                        <span><span class="status-indicator status-normal"></span>Medication - Room 202</span>
+                        <button class="btn">Complete</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Medication Schedule</h2>
+                <ul class="task-list" id="medicationSchedule">
+                    <li>
+                        <span>09:00 - Patient 201 - Amoxicillin</span>
+                        <button class="btn">Administer</button>
+                    </li>
+                    <li>
+                        <span>10:00 - Patient 202 - Ibuprofen</span>
+                        <button class="btn">Administer</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Patient Vitals</h2>
+                <canvas id="vitalsChart"></canvas>
+            </div>
+
+            <div class="card">
+                <h2>Care Plans</h2>
+                <ul class="task-list">
+                    <li>
+                        <span>Patient 201 - Post-surgery care</span>
+                        <button class="btn">View</button>
+                    </li>
+                    <li>
+                        <span>Patient 202 - Respiratory therapy</span>
+                        <button class="btn">View</button>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Shift Schedule</h2>
+                <ul class="task-list">
+                    <li>
+                        <span>Current: 7:00 AM - 3:00 PM</span>
+                        <span class="status-indicator status-normal"></span>
+                    </li>
+                    <li>
+                        <span>Next: 7:00 AM - 3:00 PM (Tomorrow)</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h2>Patient Notes</h2>
+                <textarea style="width: 100%; height: 100px; margin-top: 1rem; padding: 0.5rem;" placeholder="Add patient notes here..."></textarea>
+                <button class="btn" style="margin-top: 0.5rem;">Save Notes</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Update current time
+        function updateTime() {
+            const timeElement = document.getElementById('currentTime');
+            const now = new Date();
+            timeElement.textContent = now.toLocaleTimeString();
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Simulate emergency alerts
+        function simulateEmergency() {
+            const alert = document.getElementById('emergencyAlert');
+            alert.style.display = 'block';
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+        setTimeout(simulateEmergency, 3000);
+
+        // Handle task completion
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const listItem = this.parentElement;
+                listItem.style.opacity = '0.5';
+                this.disabled = true;
+                this.textContent = 'Completed';
+            });
+        });
+
+        // Simple vitals chart using canvas
+        const canvas = document.getElementById('vitalsChart');
+        const ctx = canvas.getContext('2d');
+        
+        // Sample data for vitals
+        const vitalsData = [65, 68, 70, 72, 69, 71, 73];
+        
+        // Draw chart
+        function drawChart() {
+            const width = canvas.width;
+            const height = canvas.height;
+            const spacing = width / (vitalsData.length - 1);
+            
+            ctx.clearRect(0, 0, width, height);
+            ctx.beginPath();
+            ctx.moveTo(0, height - (vitalsData[0] * height / 100));
+            
+            for (let i = 1; i < vitalsData.length; i++) {
+                ctx.lineTo(i * spacing, height - (vitalsData[i] * height / 100));
+            }
+            
+            ctx.strokeStyle = '#3498db';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+        }
+        
+        drawChart();
+
+        // Handle window resize for responsive chart
+        window.addEventListener('resize', function() {
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
+            drawChart();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #6366f1;
+            --success: #22c55e;
+            --background: #f9fafb;
+            --card-bg: #ffffff;
+            --text: #1f2937;
+            --text-light: #6b7280;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background-color: var(--card-bg);
+            padding: 1.5rem;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+
+        .nav-item {
+            padding: 0.75rem 1rem;
+            margin: 0.5rem 0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .nav-item.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary);
+        }
+
+        .schedule-item, .task-item {
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            background-color: #f3f4f6;
+            margin-bottom: 0.75rem;
+        }
+
+        .metrics-container {
+            height: 300px;
+        }
+
+        /* Additional Styles from Second Document */
+        .communication-item, .document-item {
+            padding: 0.75rem;
+            background-color: #f3f4f6;
+            border-radius: 0.375rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .training-module {
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 4px;
+        }
+
+        .leave-request, .payroll-info {
+            padding: 1rem;
+            background-color: #f3f4f6;
+            border-radius: 0.375rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .status-pending {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-approved {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-bg);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">HelpDesk Pro</div>
+            <div class="nav-item active" data-content="dashboard">Dashboard</div>
+            <div class="nav-item" data-content="communications">Communications</div>
+            <div class="nav-item" data-content="documents">Documents</div>
+            <div class="nav-item" data-content="training">Training</div>
+            <div class="nav-item" data-content="leave">Leave</div>
+            <div class="nav-item" data-content="payroll">Payroll</div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Welcome Back, John</h1>
+                <div class="user-profile">
+                    <div class="user-avatar">JD</div>
+                    <span>John Doe</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div id="dashboard-content" class="tab-content active">
+                <div class="dashboard-grid">
+                    <!-- Schedule Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Personal Schedule</h2>
+                            <button class="btn btn-primary" onclick="showModal('schedule')">Add Shift</button>
+                        </div>
+                        <div id="schedule-list">
+                            <div class="schedule-item">
+                                Morning Shift (8:00 AM - 4:00 PM)
+                                <div>Status: <span class="status-badge status-approved">Active</span></div>
+                            </div>
+                            <div class="schedule-item">
+                                Evening Shift (4:00 PM - 12:00 AM)
+                                <div>Status: <span class="status-badge status-pending">Pending</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Card -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Task Assignments</h2>
+                            <button class="btn btn-primary" onclick="showModal('task')">New Task</button>
+                        </div>
+                        <div id="task-list">
+                            <div class="task-item">
+                                <div>Review customer feedback</div>
+                                <div class="progress-bar"><div class="progress" style="width: 70%"></div></div>
+                            </div>
+                            <div class="task-item">
+                                <div>Update knowledge base</div>
+                                <div class="progress-bar"><div class="progress" style="width: 30%"></div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Metrics -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2 class="card-title">Performance Metrics</h2>
+                        </div>
+                        <div class="metrics-container">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Communications Tab Content -->
+            <div id="communications-content" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Department Communications</h2>
+                        <button class="btn btn-primary" onclick="showModal('communication')">New Message</button>
+                    </div>
+                    <div id="communications-list">
+                        <div class="communication-item">
+                            <strong>Team Meeting Update</strong>
+                            <p>Weekly sync moved to 2 PM tomorrow</p>
+                            <small>Posted by: Manager - 2 hours ago</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents Tab Content -->
+            <div id="documents-content" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Document Access</h2>
+                        <button class="btn btn-primary" onclick="showModal('document')">Upload Document</button>
+                    </div>
+                    <div id="documents-list">
+                        <div class="document-item">
+                            <span>Employee Handbook 2024</span>
+                            <button class="btn btn-primary" onclick="downloadDocument('handbook')">Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Training Tab Content -->
+            <div id="training-content" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Training Materials</h2>
+                    </div>
+                    <div id="training-modules">
+                        <div class="training-module">
+                            <h3>Customer Service Excellence</h3>
+                            <p>Progress: 70%</p>
+                            <div class="progress-bar">
+                                <div class="progress" style="width: 70%"></div>
+                            </div>
+                            <button class="btn btn-primary" style="margin-top: 1rem" onclick="continueTraining('cs-excellence')">Continue</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Leave Management Tab Content -->
+            <div id="leave-content" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Leave Management</h2>
+                        <button class="btn btn-primary" onclick="showModal('leave')">Request Leave</button>
+                    </div>
+                    <div id="leave-requests">
+                        <div class="leave-request">
+                            <div>Vacation - 5 days</div>
+                            <div>Dec 24-28, 2024</div>
+                            <div>Status: <span class="status-badge status-pending">Pending Approval</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payroll Tab Content -->
+            <div id="payroll-content" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Payroll Information</h2>
+                    </div>
+                    <div id="payroll-details">
+                        <div class="payroll-info">
+                            <h3>December 2024</h3>
+                            <div>Base Salary: $4,000</div>
+                            <div>Overtime: $500</div>
+                            <div>Deductions: $800</div>
+                            <div>Net Pay: $3,700</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Shift</h2>
+            <form id="scheduleForm" onsubmit="addSchedule(event)">
+                <input type="date" required style="margin: 1rem 0; padding: 0.5rem; width: 100%;">
+                <input type="time" required style="margin: 1rem 0; padding: 0.5rem; width: 100%;">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn" onclick="hideModal('schedule')">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Task</h2>
+            <form id="taskForm" onsubmit="addTask(event)">
+                <input type="text" placeholder="Task description" required style="margin: 1rem 0; padding: 0.5rem; width: 100%;">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn" onclick="hideModal('task')">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="communicationModal" class="modal">
+        <div class="modal-content">
+            <h2>New Communication</h2>
+            <form id="communicationForm" onsubmit="sendCommunication(event)">
+                <input type="text" placeholder="
+
+                (Previously generated content continues...)
+
+    <div id="communicationModal" class="modal">
+        <div class="modal-content">
+            <h2>New Communication</h2>
+            <form id="communicationForm" onsubmit="sendCommunication(event)">
+                <input type="text" placeholder="Subject" required style="margin: 1rem 0; padding: 0.5rem; width: 100%;">
+                <textarea placeholder="Message" required style="margin: 1rem 0; padding: 0.5rem; width: 100%; height: 150px;"></textarea>
+                <button type="submit" class="btn btn-primary">Send</button>
+                <button type="button" class="btn" onclick="hideModal('communication')">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="documentModal" class="modal">
+        <div class="modal-content">
+            <h2>Upload Document</h2>
+            <form id="documentForm" onsubmit="uploadDocument(event)">
+                <input type="file" required style="margin: 1rem 0; padding: 0.5rem; width: 100%;">
+                <input type="text" placeholder="Document Name" required style="margin: 1rem 0; padding: 0.5rem; width: 100%;">
+                <button type="submit" class="btn btn-primary">Upload</button>
+                <button type="button" class="btn" onclick="hideModal('document')">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="leaveModal" class="modal">
+        <div class="modal-content">
+            <h2>Request Leave</h2>
+            <form id="leaveForm" onsubmit="requestLeave(event)">
+                <select required style="margin: 1rem 0; padding: 0.5rem; width: 100%;">
+                    <option value="">Select Leave Type</option>
+                    <option value="vacation">Vacation</option>
+                    <option value="sick">Sick Leave</option>
+                    <option value="personal">Personal Leave</option>
+                </select>
+                <input type="date" placeholder="Start Date" required style="margin: 1rem 0; padding: 0.5rem; width: 100%;">
+                <input type="date" placeholder="End Date" required style="margin: 1rem 0; padding: 0.5rem; width: 100%;">
+                <button type="submit" class="btn btn-primary">Submit Request</button>
+                <button type="button" class="btn" onclick="hideModal('leave')">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Performance Chart Initialization
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Performance Score',
+                    data: [85, 88, 87, 90, 92, 91],
+                    borderColor: '#4f46e5',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+        // Navigation Functionality
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active class from all nav items and tab contents
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+                
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Show corresponding content
+                const contentId = item.dataset.content + '-content';
+                const content = document.getElementById(contentId);
+                if (content) {
+                    content.classList.add('active');
+                }
+            });
+        });
+
+        // Modal Management
+        function showModal(type) {
+            document.getElementById(`${type}Modal`).style.display = 'flex';
+        }
+
+        function hideModal(type) {
+            document.getElementById(`${type}Modal`).style.display = 'none';
+        }
+
+        // Schedule Management
+        function addSchedule(event) {
+            event.preventDefault();
+            const date = event.target.elements[0].value;
+            const time = event.target.elements[1].value;
+            const scheduleList = document.getElementById('schedule-list');
+            const newSchedule = document.createElement('div');
+            newSchedule.className = 'schedule-item';
+            newSchedule.innerHTML = `
+                ${date} at ${time}
+                <div>Status: <span class="status-badge status-pending">Pending</span></div>
+            `;
+            scheduleList.appendChild(newSchedule);
+            hideModal('schedule');
+        }
+
+        // Task Management
+        function addTask(event) {
+            event.preventDefault();
+            const taskDescription = event.target.elements[0].value;
+            const taskList = document.getElementById('task-list');
+            const newTask = document.createElement('div');
+            newTask.className = 'task-item';
+            newTask.innerHTML = `
+                <div>${taskDescription}</div>
+                <div class="progress-bar"><div class="progress" style="width: 0%"></div></div>
+            `;
+            taskList.appendChild(newTask);
+            hideModal('task');
+        }
+
+        // Communication Management
+        function sendCommunication(event) {
+            event.preventDefault();
+            const subject = event.target.elements[0].value;
+            const message = event.target.elements[1].value;
+            const communicationsList = document.getElementById('communications-list');
+            const newCommunication = document.createElement('div');
+            newCommunication.className = 'communication-item';
+            newCommunication.innerHTML = `
+                <strong>${subject}</strong>
+                <p>${message}</p>
+                <small>Posted by: John Doe - Just now</small>
+            `;
+            communicationsList.insertBefore(newCommunication, communicationsList.firstChild);
+            hideModal('communication');
+        }
+
+        // Document Management
+        function uploadDocument(event) {
+            event.preventDefault();
+            const documentName = event.target.elements[1].value;
+            const documentsList = document.getElementById('documents-list');
+            const newDocument = document.createElement('div');
+            newDocument.className = 'document-item';
+            newDocument.innerHTML = `
+                <span>${documentName}</span>
+                <button class="btn btn-primary" onclick="downloadDocument('${documentName}')">Download</button>
+            `;
+            documentsList.appendChild(newDocument);
+            hideModal('document');
+        }
+
+        function downloadDocument(docId) {
+            alert(`Downloading document: ${docId}`);
+        }
+
+        // Training Management
+        function continueTraining(moduleId) {
+            alert(`Continuing training module: ${moduleId}`);
+        }
+
+        // Leave Management
+        function requestLeave(event) {
+            event.preventDefault();
+            const leaveType = event.target.elements[0].value;
+            const startDate = event.target.elements[1].value;
+            const endDate = event.target.elements[2].value;
+            const leaveRequests = document.getElementById('leave-requests');
+            const newLeaveRequest = document.createElement('div');
+            newLeaveRequest.className = 'leave-request';
+            newLeaveRequest.innerHTML = `
+                <div>${leaveType.charAt(0).toUpperCase() + leaveType.slice(1)} - ${calculateDays(startDate, endDate)} days</div>
+                <div>${formatDate(startDate)} - ${formatDate(endDate)}</div>
+                <div>Status: <span class="status-badge status-pending">Pending Approval</span></div>
+            `;
+            leaveRequests.appendChild(newLeaveRequest);
+            hideModal('leave');
+        }
+
+        // Utility Functions
+        function calculateDays(start, end) {
+            const startDate = new Date(start);
+            const endDate = new Date(end);
+            return Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        }
+    </script>
+</body>
+</html>

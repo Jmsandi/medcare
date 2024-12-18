@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.4/gsap.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            background-image: 
+                radial-gradient(at 40% 20%, rgba(147, 197, 253, 0.15) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(167, 139, 250, 0.15) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(196, 181, 253, 0.15) 0px, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+        }
+
+        .nav-button {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .header-text {
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+    </style>
+</head>
+<body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <header class="text-center mb-12 space-y-4 header-animation">
+            <h1 class="text-5xl font-bold header-text mb-2">Healthcare Portal</h1>
+            <p class="text-gray-600 text-lg">Unified Healthcare Management System</p>
+            <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
+        </header>
+
+        <!-- Main Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Dashboards Section -->
+            <div class="glass-card rounded-xl p-6 card-animation">
+                <h2 class="text-2xl font-semibold mb-6 text-blue-800 flex items-center gap-2">
+                    <i data-lucide="layout-dashboard" class="w-6 h-6"></i>Dashboards
+                </h2>
+                <div class="section-grid">
+                    <a href="healthcare-dashboard.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg">
+                        <i data-lucide="activity" class="w-5 h-5"></i>
+                        <span>Healthcare</span>
+                    </a>
+                    <a href="dlaDashBoard.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg">
+                        <i data-lucide="bar-chart" class="w-5 h-5"></i>
+                        <span>DLA</span>
+                    </a>
+                    <a href="nursedashboard.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg">
+                        <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+                        <span>Nurse</span>
+                    </a>
+                    <a href="staffdashboard.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                        <span>Staff</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Medical Staff Section -->
+            <div class="glass-card rounded-xl p-6 card-animation">
+                <h2 class="text-2xl font-semibold mb-6 text-green-800 flex items-center gap-2">
+                    <i data-lucide="stethoscope" class="w-6 h-6"></i>Medical Staff
+                </h2>
+                <div class="section-grid">
+                    <a href="doc2.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg">
+                        <i data-lucide="user-cog" class="w-5 h-5"></i>
+                        <span>Doctors</span>
+                    </a>
+                    <a href="nurse.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg">
+                        <i data-lucide="heart" class="w-5 h-5"></i>
+                        <span>Nurse</span>
+                    </a>
+                    <a href="nurse1.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg">
+                        <i data-lucide="clipboard-list" class="w-5 h-5"></i>
+                        <span>Extended</span>
+                    </a>
+                    <a href="lab.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-lg">
+                        <i data-lucide="flask-conical" class="w-5 h-5"></i>
+                        <span>Lab</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Administration Section -->
+            <div class="glass-card rounded-xl p-6 card-animation">
+                <h2 class="text-2xl font-semibold mb-6 text-purple-800 flex items-center gap-2">
+                    <i data-lucide="settings" class="w-6 h-6"></i>Administration
+                </h2>
+                <div class="section-grid">
+                    <a href="centralAdmin.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg">
+                        <i data-lucide="database" class="w-5 h-5"></i>
+                        <span>Central</span>
+                    </a>
+                    <a href="District.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg">
+                        <i data-lucide="map" class="w-5 h-5"></i>
+                        <span>District</span>
+                    </a>
+                    <a href="Rhad.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg">
+                        <i data-lucide="building" class="w-5 h-5"></i>
+                        <span>RHAD</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Care Management Section -->
+            <div class="glass-card rounded-xl p-6 card-animation">
+                <h2 class="text-2xl font-semibold mb-6 text-red-800 flex items-center gap-2">
+                    <i data-lucide="clipboard-check" class="w-6 h-6"></i>Care Management
+                </h2>
+                <div class="section-grid">
+                    <a href="careplan.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                        <span>Care Plan</span>
+                    </a>
+                    <a href="careplan1.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg">
+                        <i data-lucide="clipboard" class="w-5 h-5"></i>
+                        <span>Extended</span>
+                    </a>
+                    <a href="patient2.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                        <span>Patient</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Technical Section -->
+            <div class="glass-card rounded-xl p-6 card-animation">
+                <h2 class="text-2xl font-semibold mb-6 text-yellow-800 flex items-center gap-2">
+                    <i data-lucide="tool" class="w-6 h-6"></i>Technical
+                </h2>
+                <div class="section-grid">
+                    <a href="labteachnicians.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg">
+                        <i data-lucide="microscope" class="w-5 h-5"></i>
+                        <span>Lab Tech</span>
+                    </a>
+                    <a href="dla.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg">
+                        <i data-lucide="database" class="w-5 h-5"></i>
+                        <span>DLA</span>
+                    </a>
+                    <a href="dla2.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-yellow-500 to-yellow-600 text-white rounded-lg">
+                        <i data-lucide="layers" class="w-5 h-5"></i>
+                        <span>Extended</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Pharmacy Section -->
+            <div class="glass-card rounded-xl p-6 card-animation">
+                <h2 class="text-2xl font-semibold mb-6 text-indigo-800 flex items-center gap-2">
+                    <i data-lucide="pill" class="w-6 h-6"></i>Pharmacy
+                </h2>
+                <div class="section-grid">
+                    <a href="pharma.html" class="nav-button flex items-center gap-2 p-4 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg">
+                        <i data-lucide="flask" class="w-5 h-5"></i>
+                        <span>Pharmacy</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // GSAP Animations
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.from('.header-animation', {
+                opacity: 0,
+                y: -50,
+                duration: 1,
+                ease: 'power3.out'
+            });
+
+            gsap.from('.card-animation', {
+                opacity: 0,
+                y: 50,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'power3.out'
+            });
+
+            // Hover animations for cards
+            const cards = document.querySelectorAll('.glass-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    gsap.to(card, {
+                        scale: 1.02,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                });
+
+                card.addEventListener('mouseleave', () => {
+                    gsap.to(card, {
+                        scale: 1,
+                        duration: 0.3,
+                        ease: 'power2.out'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
