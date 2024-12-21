@@ -160,7 +160,7 @@
         .stat-value {
             font-size: 24px;
             font-weight: bold;
-            color: var(--secondary-color);
+            color: var (--secondary-color);
             margin: 10px 0;
         }
 
@@ -365,19 +365,109 @@
                 width: 100%;
             }
         }
+
+        .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.result-item {
+    padding: 0.5rem;
+    background-color: var(--bg-color);
+    border-radius: 5px;
+}
+
+/* Messaging Styles */
+.message-container {
+    display: flex;
+    gap: 20px;
+    height: calc(100vh - 100px);
+}
+
+.contacts-list {
+    width: 300px;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    overflow-y: auto;
+}
+
+.chat-area {
+    flex: 1;
+    background: white;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-item {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+}
+
+.contact-item:hover {
+    background-color: var(--bg-color);
+}
+
+.contact-item.active {
+    background-color: var(--bg-color);
+}
+
+.messages-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.message {
+    max-width: 70%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.message.sent {
+    background-color: var(--secondary-color);
+    color: white;
+    margin-left: auto;
+}
+
+.message.received {
+    background-color: var(--bg-color);
+    margin-right: auto;
+}
+
+.message-input {
+    display: flex;
+    gap: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-color);
+}
+
+.message-input input {
+    flex: 1;
+}
     </style>
 </head>
 <body>
     <div class="container">
         <aside class="sidebar">
-            <div class="logo">Medcare Pharmacist</div>
+            <div class="logo">MedTech care Pharmacist</div>
             <ul class="nav-menu">
                 <li class="nav-item" data-section="dashboard">Dashboard</li>
                 <li class="nav-item" data-section="prescriptions">Prescriptions</li>
                 <li class="nav-item" data-section="inventory">Inventory</li>
                 <li class="nav-item" data-section="patients">Patients</li>
                 <li class="nav-item" data-section="orders">Orders</li>
+                <li class="nav-item" data-section="careplans">Care Plans</li>
+                <li class="nav-item" data-section="labresults">Lab Results</li>
+                <li class="nav-item" data-section="treatments">Treatments</li>
                 <li class="nav-item" data-section="reports">Reports</li>
+                <li class="nav-item" data-section="messages">Messages</li>
             </ul>
         </aside>
 
@@ -584,6 +674,138 @@
             </div>
         </section>
 
+        <!-- Care Plans Section -->
+        <section id="careplans" class="section">
+            <div class="header">
+                <h1>Care Plan Management</h1>
+                <button onclick="showNewCarePlanForm()">Create Care Plan</button>
+            </div>
+
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search care plans...">
+                    <button>Search</button>
+                </div>
+
+                <div class="filters">
+                    <select id="care-plan-status">
+                        <option>Status: All</option>
+                        <option>Active</option>
+                        <option>Completed</option>
+                        <option>Pending Review</option>
+                    </select>
+                    <select id="care-plan-type">
+                        <option>Type: All</option>
+                        <option>Chronic Care</option>
+                        <option>Acute Care</option>
+                        <option>Preventive Care</option>
+                    </select>
+                </div>
+
+                <table id="careplans-table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Plan Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Lab Results Section -->
+        <section id="labresults" class="section">
+            <div class="header">
+                <h1>Laboratory Results</h1>
+                <button onclick="requestNewLabTest()">Request New Test</button>
+            </div>
+
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search lab results...">
+                    <button>Search</button>
+                </div>
+
+                <div class="filters">
+                    <select id="test-type-filter">
+                        <option>All Test Types</option>
+                        <option>Blood Test</option>
+                        <option>Urinalysis</option>
+                        <option>Biochemistry</option>
+                    </select>
+                    <select id="status-filter">
+                        <option>All Status</option>
+                        <option>Pending</option>
+                        <option>In Progress</option>
+                        <option>Completed</option>
+                    </select>
+                </div>
+
+                <table id="lab-results-table">
+                    <thead>
+                        <tr>
+                            <th>Test ID</th>
+                            <th>Patient</th>
+                            <th>Test Type</th>
+                            <th>Date Requested</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Treatments Section -->
+        <section id="treatments" class="section">
+            <div class="header">
+                <h1>Treatment Management</h1>
+                <button onclick="addNewTreatment()">Add New Treatment</button>
+            </div>
+
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search treatments...">
+                    <button>Search</button>
+                </div>
+
+                <div class="filters">
+                    <select id="treatment-type">
+                        <option>All Types</option>
+                        <option>Medication</option>
+                        <option>Therapy</option>
+                        <option>Procedure</option>
+                    </select>
+                    <select id="treatment-status">
+                        <option>All Status</option>
+                        <option>Active</option>
+                        <option>Completed</option>
+                        <option>On Hold</option>
+                    </select>
+                </div>
+
+                <table id="treatments-table">
+                    <thead>
+                        <tr>
+                            <th>Patient Name</th>
+                            <th>Treatment Type</th>
+                            <th>Start Date</th>
+                            <th>Duration</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Reports Section -->
         <section id="reports" class="section">
             <div class="header">
@@ -614,6 +836,28 @@
 
                 <div id="report-preview" class="card" style="margin-top: 20px;">
                     <!-- Report content will be displayed here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Messages Section -->
+        <section id="messages" class="section">
+            <div class="header">
+                <h1>Messages</h1>
+            </div>
+            <div class="message-container">
+                <div class="contacts-list">
+                    <div class="search-bar">
+                        <input type="text" id="contact-search" placeholder="Search contacts...">
+                    </div>
+                    <div id="contacts"></div>
+                </div>
+                <div class="chat-area">
+                    <div class="messages-list" id="messages-list"></div>
+                    <div class="message-input">
+                        <input type="text" id="message-text" placeholder="Type your message...">
+                        <button onclick="sendMessage()">Send</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -672,6 +916,107 @@
             { id: 'ORD002', date: '2024-12-13', supplier: 'MedSupply', items: 3, total: '$800', status: 'Delivered' }
         ];
 
+        // Sample care plans data
+        const sampleCarePlans = [
+            {
+                id: 'CP001',
+                patientName: 'John Doe',
+                planType: 'Chronic Care',
+                startDate: '2024-01-01',
+                endDate: '2024-12-31',
+                status: 'Active',
+                medications: [
+                    { name: 'Metformin', dosage: '500mg', frequency: 'Twice daily' },
+                    { name: 'Lisinopril', dosage: '10mg', frequency: 'Once daily' }
+                ],
+                notes: 'Diabetes Type 2 management plan'
+            },
+            {
+                id: 'CP002',
+                patientName: 'Jane Smith',
+                planType: 'Acute Care',
+                startDate: '2024-12-01',
+                endDate: '2024-12-15',
+                status: 'Completed',
+                medications: [
+                    { name: 'Amoxicillin', dosage: '500mg', frequency: 'Three times daily' }
+                ],
+                notes: 'Post-surgery recovery plan'
+            }
+        ];
+
+        // Add sample lab results data
+        const sampleLabResults = [
+            {
+                id: 'LAB001',
+                patientName: 'John Doe',
+                testType: 'Blood Test',
+                dateRequested: '2024-12-14',
+                status: 'Completed',
+                results: {
+                    glucose: '95 mg/dL',
+                    cholesterol: '180 mg/dL',
+                    hemoglobin: '14.5 g/dL'
+                }
+            },
+            {
+                id: 'LAB002',
+                patientName: 'Jane Smith',
+                testType: 'Urinalysis',
+                dateRequested: '2024-12-13',
+                status: 'Pending',
+                results: null
+            }
+        ];
+
+        // Add to existing sample data
+        const sampleTreatments = [
+            {
+                id: 'TRT001',
+                patientName: 'John Doe',
+                treatmentType: 'Medication',
+                startDate: '2024-12-01',
+                duration: '30 days',
+                status: 'Active',
+                details: {
+                    medication: 'Amoxicillin',
+                    dosage: '500mg',
+                    frequency: 'Three times daily',
+                    notes: 'Take with food'
+                }
+            },
+            {
+                id: 'TRT002',
+                patientName: 'Jane Smith',
+                treatmentType: 'Therapy',
+                startDate: '2024-12-10',
+                duration: '6 weeks',
+                status: 'Active',
+                details: {
+                    type: 'Physical Therapy',
+                    frequency: 'Twice weekly',
+                    notes: 'Focus on lower back exercises'
+                }
+            }
+        ];
+
+        // Sample contacts data
+        const sampleContacts = [
+            { id: 1, name: 'Dr. John Smith', role: 'Physician', lastMessage: 'Patient prescription inquiry' },
+            { id: 2, name: 'Nurse Sarah', role: 'Nurse', lastMessage: 'Medication stock check' },
+            { id: 3, name: 'Lab Tech Mike', role: 'Lab Technician', lastMessage: 'Test results ready' },
+            { id: 4, name: 'Dr. Emily Chen', role: 'Specialist', lastMessage: 'Treatment consultation' }
+        ];
+
+        // Sample messages data
+        const sampleMessages = {
+            1: [
+                { sent: false, text: 'Hello, need to verify a prescription for patient #1234', time: '09:30' },
+                { sent: true, text: 'Hi Dr. Smith, I\'ll check that right away', time: '09:31' },
+                { sent: false, text: 'Thanks, it\'s urgent', time: '09:31' }
+            ]
+        };
+
         // Initialize the interface
         document.addEventListener('DOMContentLoaded', () => {
             loadData();
@@ -714,6 +1059,10 @@
             loadInventoryTable();
             loadPatientsTable();
             loadOrdersTable();
+            loadCarePlansTable();
+            loadLabResultsTable();
+            loadTreatmentsTable();
+            loadContacts();
         }
 
         function loadPrescriptionsTable() {
@@ -784,6 +1133,135 @@
             `).join('');
         }
 
+        // Load care plans table
+        function loadCarePlansTable() {
+            const tbody = document.querySelector('#careplans-table tbody');
+            tbody.innerHTML = sampleCarePlans.map(plan => `
+                <tr>
+                    <td>${plan.patientName}</td>
+                    <td>${plan.planType}</td>
+                    <td>${plan.startDate}</td>
+                    <td>${plan.endDate}</td>
+                    <td><span class="status-pill status-${plan.status.toLowerCase().replace(' ', '-')}">${plan.status}</span></td>
+                    <td>
+                        <button onclick="viewCarePlan('${plan.id}')">View</button>
+                        <button onclick="editCarePlan('${plan.id}')">Edit</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load lab results table
+        function loadLabResultsTable() {
+            const tbody = document.querySelector('#lab-results-table tbody');
+            if (!tbody) return;
+
+            tbody.innerHTML = sampleLabResults.map(test => `
+                <tr>
+                    <td>${test.id}</td>
+                    <td>${test.patientName}</td>
+                    <td>${test.testType}</td>
+                    <td>${test.dateRequested}</td>
+                    <td><span class="status-pill status-${test.status.toLowerCase()}">${test.status}</span></td>
+                    <td>
+                        <button onclick="viewLabResult('${test.id}')">View</button>
+                        ${test.status === 'Completed' ? 
+                            `<button onclick="downloadLabResult('${test.id}')">Download</button>` : 
+                            `<button onclick="checkLabStatus('${test.id}')">Check Status</button>`}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load treatments table
+        function loadTreatmentsTable() {
+            const tbody = document.querySelector('#treatments-table tbody');
+            if (!tbody) return;
+
+            tbody.innerHTML = sampleTreatments.map(treatment => `
+                <tr>
+                    <td>${treatment.patientName}</td>
+                    <td>${treatment.treatmentType}</td>
+                    <td>${treatment.startDate}</td>
+                    <td>${treatment.duration}</td>
+                    <td><span class="status-pill status-${treatment.status.toLowerCase()}">${treatment.status}</span></td>
+                    <td>
+                        <button onclick="viewTreatment('${treatment.id}')">View</button>
+                        <button onclick="editTreatment('${treatment.id}')">Edit</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Load contacts
+        function loadContacts() {
+            const contactsDiv = document.getElementById('contacts');
+            contactsDiv.innerHTML = sampleContacts.map(contact => `
+                <div class="contact-item" onclick="selectContact(${contact.id})">
+                    <strong>${contact.name}</strong>
+                    <div>${contact.role}</div>
+                    <small>${contact.lastMessage}</small>
+                </div>
+            `).join('');
+        }
+
+        // Select contact and load chat
+        function selectContact(contactId) {
+            document.querySelectorAll('.contact-item').forEach(item => item.classList.remove('active'));
+            document.querySelector(`.contact-item:nth-child(${contactId})`).classList.add('active');
+            loadMessages(contactId);
+        }
+
+        // Load messages for selected contact
+        function loadMessages(contactId) {
+            const messagesList = document.getElementById('messages-list');
+            const messages = sampleMessages[contactId] || [];
+            messagesList.innerHTML = messages.map(msg => `
+                <div class="message ${msg.sent ? 'sent' : 'received'}">
+                    <div>${msg.text}</div>
+                    <small>${msg.time}</small>
+                </div>
+            `).join('');
+            messagesList.scrollTop = messagesList.scrollHeight;
+        }
+
+        // Send new message
+        function sendMessage() {
+            const input = document.getElementById('message-text');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const activeContact = document.querySelector('.contact-item.active');
+            if (!activeContact) return;
+
+            const contactId = parseInt(activeContact.getAttribute('onclick').match(/\d+/)[0]);
+            if (!sampleMessages[contactId]) {
+                sampleMessages[contactId] = [];
+            }
+
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            sampleMessages[contactId].push({ sent: true, text, time });
+            
+            loadMessages(contactId);
+            input.value = '';
+        }
+
+        // Search contacts
+        document.getElementById('contact-search').addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            document.querySelectorAll('.contact-item').forEach(item => {
+                const name = item.querySelector('strong').textContent.toLowerCase();
+                item.style.display = name.includes(searchTerm) ? 'block' : 'none';
+            });
+        });
+
+        // Add message input Enter key handler
+        document.getElementById('message-text')?.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
         // Form handling functions
         function showNewPrescriptionForm() {
             const formHTML = `
@@ -814,6 +1292,194 @@
                 </div>
             `;
             document.querySelector('#prescriptions').insertAdjacentHTML('beforeend', formHTML);
+        }
+
+        // Show new care plan form
+        function showNewCarePlanForm() {
+            const formHTML = `
+                <div class="card" id="care-plan-form">
+                    <h2>Create New Care Plan</h2>
+                    <div class="form-group">
+                        <label>Patient</label>
+                        <select id="care-plan-patient">
+                            ${samplePatients.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Plan Type</label>
+                        <select id="care-plan-type">
+                            <option value="chronic">Chronic Care</option>
+                            <option value="acute">Acute Care</option>
+                            <option value="preventive">Preventive Care</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="care-plan-start">
+                    </div>
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="care-plan-end">
+                    </div>
+                    <div class="form-group">
+                        <label>Medications</label>
+                        <div id="medications-list">
+                            <div class="medication-entry">
+                                <select class="medication-select">
+                                    ${sampleInventory.map(m => `<option value="${m.name}">${m.name}</option>`).join('')}
+                                </select>
+                                <input type="text" placeholder="Dosage" class="medication-dosage">
+                                <input type="text" placeholder="Frequency" class="medication-frequency">
+                                <button onclick="removeMedication(this)">Remove</button>
+                            </div>
+                        </div>
+                        <button onclick="addMedication()">Add Medication</button>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="care-plan-notes"></textarea>
+                    </div>
+                    <button onclick="submitCarePlan()">Save Care Plan</button>
+                    <button onclick="cancelCarePlan()">Cancel</button>
+                </div>
+            `;
+            document.querySelector('#careplans').insertAdjacentHTML('beforeend', formHTML);
+        }
+
+        // View care plan details
+        function viewCarePlan(planId) {
+            const plan = sampleCarePlans.find(p => p.id === planId);
+            const detailsHTML = `
+                <div class="card">
+                    <h2>Care Plan Details - ${plan.patientName}</h2>
+                    <div class="details-grid">
+                        <div>
+                            <strong>Plan Type:</strong> ${plan.planType}
+                        </div>
+                        <div>
+                            <strong>Status:</strong> ${plan.status}
+                        </div>
+                        <div>
+                            <strong>Duration:</strong> ${plan.startDate} to ${plan.endDate}
+                        </div>
+                    </div>
+                    <h3>Medications</h3>
+                    <ul>
+                        ${plan.medications.map(med => `
+                            <li>${med.name} - ${med.dosage} ${med.frequency}</li>
+                        `).join('')}
+                    </ul>
+                    <div class="notes">
+                        <h3>Notes</h3>
+                        <p>${plan.notes}</p>
+                    </div>
+                    <button onclick="closeCarePlanDetails()">Close</button>
+                </div>
+            `;
+            document.querySelector('#careplans').insertAdjacentHTML('beforeend', detailsHTML);
+        }
+
+        // Request new lab test
+        function requestNewLabTest() {
+            const formHTML = `
+                <div class="card" id="new-lab-test-form">
+                    <h2>Request New Laboratory Test</h2>
+                    <div class="form-group">
+                        <label>Patient</label>
+                        <select id="lab-test-patient">
+                            ${samplePatients.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Test Type</label>
+                        <select id="lab-test-type">
+                            <option value="blood">Blood Test</option>
+                            <option value="urine">Urinalysis</option>
+                            <option value="biochem">Biochemistry</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select id="lab-test-priority">
+                            <option value="normal">Normal</option>
+                            <option value="urgent">Urgent</option>
+                            <option value="emergency">Emergency</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea id="lab-test-notes"></textarea>
+                    </div>
+                    <button onclick="submitLabTest()">Submit Request</button>
+                    <button onclick="cancelLabTest()">Cancel</button>
+                </div>
+            `;
+            document.querySelector('#labresults').insertAdjacentHTML('beforeend', formHTML);
+        }
+
+        // View lab result details
+        function viewLabResult(testId) {
+            const test = sampleLabResults.find(t => t.id === testId);
+            if (!test) return;
+
+            const resultsHTML = `
+                <div class="card">
+                    <h2>Lab Result Details - ${test.id}</h2>
+                    <div class="details-grid">
+                        <div>
+                            <strong>Patient:</strong> ${test.patientName}
+                        </div>
+                        <div>
+                            <strong>Test Type:</strong> ${test.testType}
+                        </div>
+                        <div>
+                            <strong>Date:</strong> ${test.dateRequested}
+                        </div>
+                        <div>
+                            <strong>Status:</strong> ${test.status}
+                        </div>
+                    </div>
+                    ${test.results ? `
+                        <h3>Test Results</h3>
+                        <div class="results-grid">
+                            ${Object.entries(test.results).map(([key, value]) => `
+                                <div class="result-item">
+                                    <strong>${key}:</strong> ${value}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : '<p>Results pending...</p>'}
+                    <button onclick="closeLabResult()">Close</button>
+                    ${test.status === 'Completed' ? 
+                        '<button onclick="downloadLabResult(\'' + test.id + '\')">Download PDF</button>' : ''}
+                </div>
+            `;
+            document.querySelector('#labresults').insertAdjacentHTML('beforeend', resultsHTML);
+        }
+
+        function downloadLabResult(testId) {
+            // Implement PDF download functionality
+            alert(`Downloading lab result ${testId}`);
+        }
+
+        function checkLabStatus(testId) {
+            // Implement status check functionality
+            alert(`Checking status for lab test ${testId}`);
+        }
+
+        function submitLabTest() {
+            // Implement lab test submission
+            alert('Lab test request submitted successfully');
+            document.getElementById('new-lab-test-form').remove();
+        }
+
+        function cancelLabTest() {
+            document.getElementById('new-lab-test-form').remove();
+        }
+
+        function closeLabResult() {
+            const resultCard = document.querySelector('#labresults .card:last-child');
+            if (resultCard) resultCard.remove();
         }
 
         // Report generation functions
@@ -939,6 +1605,111 @@
         function updateOrderStatus(orderId) {
             const order = sampleOrders.find(o => o.id === orderId);
             alert(`Updating status for order ${orderId}`);
+        }
+
+        // Form handling functions
+        function addNewTreatment() {
+            const formHTML = `
+                <div class="card" id="new-treatment-form">
+                    <h2>Add New Treatment</h2>
+                    <div class="form-group">
+                        <label>Patient</label>
+                        <select id="treatment-patient">
+                            ${samplePatients.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Treatment Type</label>
+                        <select id="treatment-type">
+                            <option value="medication">Medication</option>
+                            <option value="therapy">Therapy</option>
+                            <option value="procedure">Procedure</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="treatment-start">
+                    </div>
+                    <div class="form-group">
+                        <label>Duration</label>
+                        <input type="text" id="treatment-duration">
+                    </div>
+                    <div class="form-group">
+                        <label>Details</label>
+                        <textarea id="treatment-details"></textarea>
+                    </div>
+                    <button onclick="submitTreatment()">Save Treatment</button>
+                    <button onclick="cancelTreatment()">Cancel</button>
+                </div>
+            `;
+            document.querySelector('#treatments').insertAdjacentHTML('beforeend', formHTML);
+        }
+
+        // View treatment details
+        function viewTreatment(treatmentId) {
+            const treatment = sampleTreatments.find(t => t.id === treatmentId);
+            if (!treatment) return;
+
+            const detailsHTML = `
+                <div class="card">
+                    <h2>Treatment Details - ${treatment.patientName}</h2>
+                    <div class="details-grid">
+                        <div>
+                            <strong>Type:</strong> ${treatment.treatmentType}
+                        </div>
+                        <div>
+                            <strong>Start Date:</strong> ${treatment.startDate}
+                        </div>
+                        <div>
+                            <strong>Duration:</strong> ${treatment.duration}
+                        </div>
+                        <div>
+                            <strong>Status:</strong> ${treatment.status}
+                        </div>
+                    </div>
+                    <h3>Treatment Details</h3>
+                    <div class="details-grid">
+                        ${Object.entries(treatment.details).map(([key, value]) => `
+                            <div class="detail-item">
+                                <strong>${key}:</strong> ${value}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="button-group">
+                        <button onclick="closeTreatmentDetails()">Close</button>
+                        <button onclick="editTreatment('${treatment.id}')">Edit</button>
+                        ${treatment.status === 'Active' ? 
+                            `<button onclick="updateTreatmentStatus('${treatment.id}', 'Completed')">Mark Complete</button>` : ''}
+                    </div>
+                </div>
+            `;
+            document.querySelector('#treatments').insertAdjacentHTML('beforeend', detailsHTML);
+        }
+
+        function submitTreatment() {
+            // Implementation for submitting new treatment
+            alert('Treatment saved successfully');
+            document.getElementById('new-treatment-form').remove();
+            loadTreatmentsTable();
+        }
+
+        function cancelTreatment() {
+            document.getElementById('new-treatment-form').remove();
+        }
+
+        function closeTreatmentDetails() {
+            const detailsCard = document.querySelector('#treatments .card:last-child');
+            if (detailsCard) detailsCard.remove();
+        }
+
+        function editTreatment(treatmentId) {
+            const treatment = sampleTreatments.find(t => t.id === treatmentId);
+            alert(`Editing treatment for ${treatment.patientName}`);
+        }
+
+        function updateTreatmentStatus(treatmentId, newStatus) {
+            alert(`Updating treatment ${treatmentId} status to ${newStatus}`);
+            loadTreatmentsTable();
         }
 
         // Initialize the interface

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Lab Dashboard</title>
+    <title>MedTech Lab Dashboard</title>
     <style>
         :root {
             --primary-color: #4f46e5;
@@ -262,6 +262,84 @@
                 opacity: 1;
             }
         }
+
+        .messages-container {
+            display: flex;
+            height: 600px;
+            background: var(--card-bg);
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .contacts-list {
+            width: 300px;
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+        }
+
+        .contact-item {
+            padding: 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background-color 0.2s;
+        }
+
+        .contact-item:hover {
+            background-color: #f9fafb;
+        }
+
+        .contact-item.active {
+            background-color: #f3f4f6;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: bold;
+        }
+
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            background-color: var(--primary-color);
+            color: white;
+            margin-left: auto;
+        }
+
+        .message.received {
+            background-color: #f3f4f6;
+        }
+
+        .message-input {
+            display: flex;
+            padding: 1rem;
+            gap: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .message-input textarea {
+            flex: 1;
+            resize: none;
+            height: 40px;
+        }
     </style>
 </head>
 <body>
@@ -297,6 +375,7 @@
             <button class="tab-button" onclick="showTab('test-history')">Test History</button>
             <button class="tab-button" onclick="showTab('reports')">Reports</button>
             <button class="tab-button" onclick="showTab('analytics')">Analytics</button>
+            <button class="tab-button" onclick="showTab('messages')">Messages</button>
         </div>
 
         <!-- Result Entry Tab -->
@@ -405,6 +484,27 @@
                 <div class="stat-card">
                     <div class="stat-title">Monthly Tests</div>
                     <div class="stat-value">467</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Tab -->
+        <div id="messages" class="tab-content">
+            <div class="messages-container">
+                <div class="contacts-list">
+                    <div class="search-bar">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="contact-search" placeholder="Search contacts...">
+                    </div>
+                    <div id="contacts"></div>
+                </div>
+                <div class="chat-area">
+                    <div id="chat-header"></div>
+                    <div id="chat-messages"></div>
+                    <div class="message-input">
+                        <textarea id="message-text" placeholder="Type your message..."></textarea>
+                        <button onclick="sendMessage()">Send</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -655,6 +755,106 @@
         // Initialize the page
         populateHistory();
         updateStats();
+
+        // Sample contacts data
+        const contacts = [
+            { id: 1, name: 'Dr. Johnson', role: 'Pathologist', status: 'online' },
+            { id: 2, name: 'Dr. Wilson', role: 'Radiologist', status: 'offline' },
+            { id: 3, name: 'Nurse Sarah', role: 'Head Nurse', status: 'online' },
+            { id: 4, name: 'Dr. Thompson', role: 'Lab Director', status: 'online' }
+        ];
+
+        // Sample messages
+        let messages = {};
+        let currentContact = null;
+
+        // Initialize contacts
+        function initializeContacts() {
+            const contactsDiv = document.getElementById('contacts');
+            contactsDiv.innerHTML = contacts.map(contact => `
+                <div class="contact-item" onclick="selectContact(${contact.id})">
+                    <div><strong>${contact.name}</strong></div>
+                    <div style="font-size: 0.875rem; color: #6b7280;">${contact.role}</div>
+                    <div style="font-size: 0.75rem; color: ${contact.status === 'online' ? 'var(--success-color)' : '#6b7280'}">
+                        ● ${contact.status}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Select contact
+        function selectContact(id) {
+            currentContact = contacts.find(c => c.id === id);
+            document.querySelectorAll('.contact-item').forEach(item => item.classList.remove('active'));
+            event.target.closest('.contact-item').classList.add('active');
+            
+            document.getElementById('chat-header').textContent = currentContact.name;
+            if (!messages[id]) messages[id] = [];
+            displayMessages(id);
+        }
+
+        // Send message
+        function sendMessage() {
+            if (!currentContact) return;
+            
+            const messageText = document.getElementById('message-text').value.trim();
+            if (!messageText) return;
+
+            const newMessage = {
+                id: Date.now(),
+                text: messageText,
+                sender: 'me',
+                timestamp: new Date().toISOString()
+            };
+
+            if (!messages[currentContact.id]) messages[currentContact.id] = [];
+            messages[currentContact.id].push(newMessage);
+            
+            displayMessages(currentContact.id);
+            document.getElementById('message-text').value = '';
+        }
+
+        // Display messages
+        function displayMessages(contactId) {
+            const chatMessages = document.getElementById('chat-messages');
+            chatMessages.innerHTML = messages[contactId]?.map(message => `
+                <div class="message ${message.sender === 'me' ? 'sent' : 'received'}">
+                    ${message.text}
+                </div>
+            `).join('') || '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Search contacts
+        document.getElementById('contact-search').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const filteredContacts = contacts.filter(contact =>
+                contact.name.toLowerCase().includes(searchTerm) ||
+                contact.role.toLowerCase().includes(searchTerm)
+            );
+            
+            const contactsDiv = document.getElementById('contacts');
+            contactsDiv.innerHTML = filteredContacts.map(contact => `
+                <div class="contact-item" onclick="selectContact(${contact.id})">
+                    <div><strong>${contact.name}</strong></div>
+                    <div style="font-size: 0.875rem; color: #6b7280;">${contact.role}</div>
+                    <div style="font-size: 0.75rem; color: ${contact.status === 'online' ? 'var(--success-color)' : '#6b7280'}">
+                        ● ${contact.status}
+                    </div>
+                </div>
+            `).join('');
+        });
+
+        // Add message input event listener for Enter key
+        document.getElementById('message-text').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Initialize messages tab
+        initializeContacts();
     </script>
 </body>
 </html>

@@ -582,6 +582,73 @@
                 </li>
             </ul>
         </div>
+
+        <!-- Patient Search Section -->
+        <div class="card">
+            <h2>Patient Search</h2>
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <input type="text" id="patientSearchInput" class="message-input" placeholder="Enter patient name or ID...">
+                <button class="btn" onclick="searchPatient()">Search</button>
+            </div>
+            <div id="patientSearchResults" style="display: none;">
+                <div style="border: 1px solid #eee; padding: 1rem; border-radius: 4px;">
+                    <h3 style="margin-bottom: 0.5rem;">Patient Information</h3>
+                    <div style="display: grid; gap: 0.5rem;">
+                        <p><strong>Name:</strong> <span id="patientName">-</span></p>
+                        <p><strong>ID:</strong> <span id="patientId">-</span></p>
+                        <p><strong>Room:</strong> <span id="patientRoom">-</span></p>
+                        <p><strong>Status:</strong> <span id="patientStatus">-</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lab Results Section -->
+        <div class="card">
+            <h2>Lab Results</h2>
+            <div style="margin-bottom: 1rem;">
+                <select class="message-input" id="labResultsFilter" style="height: 40px;">
+                    <option value="recent">Recent Results</option>
+                    <option value="pending">Pending</option>
+                    <option value="critical">Critical</option>
+                </select>
+            </div>
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="background: #f8f9fa;">
+                        <th style="padding: 0.8rem; text-align: left; border-bottom: 2px solid #eee;">Date</th>
+                        <th style="padding: 0.8rem; text-align: left; border-bottom: 2px solid #eee;">Patient</th>
+                        <th style="padding: 0.8rem; text-align: left; border-bottom: 2px solid #eee;">Test Type</th>
+                        <th style="padding: 0.8rem; text-align: left; border-bottom: 2px solid #eee;">Status</th>
+                        <th style="padding: 0.8rem; text-align: left; border-bottom: 2px solid #eee;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="labResultsTable">
+                    <tr>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">2024-01-15</td>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">John Doe</td>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">Blood Test</td>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">
+                            <span class="status-indicator status-urgent"></span>Critical
+                        </td>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">
+                            <button class="btn">View</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">2024-01-15</td>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">Jane Smith</td>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">Urinalysis</td>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">
+                            <span class="status-indicator status-normal"></span>Normal
+                        </td>
+                        <td style="padding: 0.8rem; border-bottom: 1px solid #eee;">
+                            <button class="btn">View</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
         </div>
     </div>
 
@@ -719,6 +786,51 @@
                 const sectionId = button.dataset.section;
                 document.getElementById(sectionId).classList.add('active');
             });
+        });
+
+        // Patient Search functionality
+        function searchPatient() {
+            const searchInput = document.getElementById('patientSearchInput').value;
+            const resultsDiv = document.getElementById('patientSearchResults');
+            
+            if (searchInput.trim() === '') {
+                alert('Please enter a patient name or ID');
+                return;
+            }
+
+            // Simulate patient data (replace with actual data fetch)
+            const patientData = {
+                name: 'John Doe',
+                id: 'P12345',
+                room: '201',
+                status: 'Stable'
+            };
+
+            // Update the results
+            document.getElementById('patientName').textContent = patientData.name;
+            document.getElementById('patientId').textContent = patientData.id;
+            document.getElementById('patientRoom').textContent = patientData.room;
+            document.getElementById('patientStatus').textContent = patientData.status;
+            
+            resultsDiv.style.display = 'block';
+        }
+
+        // Lab Results filter functionality
+        document.getElementById('labResultsFilter').addEventListener('change', function(e) {
+            const filterValue = e.target.value;
+            const rows = document.getElementById('labResultsTable').getElementsByTagName('tr');
+            
+            // Simulate filtering (replace with actual filtering logic)
+            for (let row of rows) {
+                const status = row.querySelector('td:nth-child(4)')?.textContent.toLowerCase();
+                if (status) {
+                    row.style.display = 
+                        (filterValue === 'recent') ||
+                        (filterValue === 'pending' && status.includes('pending')) ||
+                        (filterValue === 'critical' && status.includes('critical'))
+                        ? '' : 'none';
+                }
+            }
         });
     </script>
 </body>

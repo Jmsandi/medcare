@@ -1,0 +1,169 @@
+.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Management - Staff Dashboard</title>
+    <style>
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .patient-search {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .patient-list {
+            display: grid;
+            gap: 1rem;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+        
+        .patient-card {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            transition: transform 0.2s;
+        }
+        
+        .patient-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .patient-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .patient-details {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+        
+        .patient-actions {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">Medcare staffs</div>
+            <a href="../staffdashboard.html" class="nav-item">Dashboard</a>
+            <a href="communications.html" class="nav-item">Communications</a>
+            <a href="documents.html" class="nav-item">Documents</a>
+            <a href="training.html" class="nav-item">Training</a>
+            <a href="patient-management.html" class="nav-item active">Patient Management</a>
+            <a href="leave.html" class="nav-item">Leave</a>
+            <a href="payroll.html" class="nav-item">Payroll</a>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="header">
+                <h1>Patient Management</h1>
+                <div class="user-profile">
+                    <div class="user-avatar">JD</div>
+                    <span>John Doe</span>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Patient Search -->
+                <div class="card full-width">
+                    <div class="card-header">
+                        <h2 class="card-title">Patient Search</h2>
+                        <a href="patientregistration.html" class="btn btn-primary">Register New Patient</a>
+                    </div>
+                    <div class="card-content">
+                        <input type="text" id="patientSearch" 
+                               class="patient-search"
+                               placeholder="Search patients by name or ID...">
+                    </div>
+                </div>
+
+                <!-- Patient List -->
+                <div class="card full-width">
+                    <div class="card-header">
+                        <h2 class="card-title">Patient List</h2>
+                    </div>
+                    <div id="patientList" class="patient-list">
+                        <!-- Patient cards will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // Sample patient data - replace with actual data source
+const patients = [
+    { id: 'P001', name: 'John Smith', age: 45, room: '203', status: 'Active' },
+    { id: 'P002', name: 'Mary Johnson', age: 32, room: '105', status: 'Active' },
+    // Add more patient data as needed
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+    const patientSearch = document.getElementById('patientSearch');
+    const patientList = document.getElementById('patientList');
+
+    function renderPatients(patientsToRender) {
+        patientList.innerHTML = patientsToRender.map(patient => `
+            <div class="patient-card">
+                <div class="patient-info">
+                    <strong>${patient.name}</strong>
+                    <span>ID: ${patient.id}</span>
+                </div>
+                <div class="patient-details">
+                    Age: ${patient.age} | Room: ${patient.room}
+                </div>
+                <div class="patient-actions">
+                    <button class="btn btn-primary" onclick="viewPatientDetails('${patient.id}')">
+                        View Details
+                    </button>
+                    <button class="btn btn-secondary" onclick="editPatient('${patient.id}')">
+                        Edit
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    patientSearch.addEventListener('input', function(e) {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredPatients = patients.filter(patient => 
+            patient.name.toLowerCase().includes(searchTerm) ||
+            patient.id.toLowerCase().includes(searchTerm)
+        );
+        renderPatients(filteredPatients);
+    });
+
+    // Initial render
+    renderPatients(patients);
+});
+
+function viewPatientDetails(patientId) {
+    window.location.href = `patient-details.html?id=${patientId}`;
+}
+
+function editPatient(patientId) {
+    window.location.href = `patient-edit.html?id=${patientId}`;
+}
+    </script>
+</body>
+</html>

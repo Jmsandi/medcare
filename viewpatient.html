@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Profile</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--primary-color);
+        }
+
+        .profile-info h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            background-color: #22c55e;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            display: inline-block;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-background);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .info-group {
+            margin-bottom: 1rem;
+        }
+
+        .info-label {
+            font-weight: 500;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+
+        .info-value {
+            margin-top: 0.25rem;
+        }
+
+        .tab-container {
+            margin-top: 2rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            color: #64748b;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-image">
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="profile-info">
+                <h1>John Smith</h1>
+                <p>Patient ID: P123456789</p>
+                <span class="status-badge">Active Patient</span>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" data-tab="personal">Personal Information</div>
+            <div class="tab" data-tab="medical">Medical Information</div>
+            <div class="tab" data-tab="history">Medical History</div>
+        </div>
+
+        <div class="tab-content active" id="personal">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-user"></i>
+                        Basic Information
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Date of Birth</div>
+                        <div class="info-value">05/15/1980</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Gender</div>
+                        <div class="info-value">Male</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Blood Group</div>
+                        <div class="info-value">O+</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-address-book"></i>
+                        Contact Information
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Phone</div>
+                        <div class="info-value">(555) 123-4567</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">john.smith@email.com</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Address</div>
+                        <div class="info-value">123 Main St, Anytown, ST 12345</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="medical">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-notes-medical"></i>
+                        Current Conditions
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Allergies</div>
+                        <div class="info-value">Penicillin, Peanuts</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Chronic Conditions</div>
+                        <div class="info-value">Hypertension, Type 2 Diabetes</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-pills"></i>
+                        Current Medications
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Daily Medications</div>
+                        <div class="info-value">
+                            - Metformin 500mg (2x daily)<br>
+                            - Lisinopril 10mg (1x daily)<br>
+                            - Aspirin 81mg (1x daily)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-content" id="history">
+            <div class="grid">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-history"></i>
+                        Past Surgeries
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">2018</div>
+                        <div class="info-value">Appendectomy</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">2015</div>
+                        <div class="info-value">Knee Arthroscopy</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fas fa-syringe"></i>
+                        Immunizations
+                    </div>
+                    <div class="info-group">
+                        <div class="info-label">Recent Vaccinations</div>
+                        <div class="info-value">
+                            - Flu Shot (10/2023)<br>
+                            - COVID-19 Booster (08/2023)<br>
+                            - Tdap (05/2022)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Add active class to clicked tab and corresponding content
+                    tab.classList.add('active');
+                    const tabId = tab.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
