@@ -316,6 +316,66 @@
                 </table>
             </div>
 
+            <!-- Replace the existing Patient Management card with this new version -->
+            <div class="card" style="grid-column: 1 / -1;">
+                <h2>Patient Management</h2>
+                <div class="management-actions" style="margin-bottom: 1rem;">
+                    <a href="patientregistration.html" class="btn" style="margin-right: 1rem;">
+                        <i class="fas fa-user-plus"></i> Register New Patient
+                    </a>
+                    <div style="display: inline-flex; gap: 0.5rem; align-items: center;">
+                        <input type="text" 
+                               placeholder="Search patient..." 
+                               style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">
+                        <button class="btn" onclick="searchPatients()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
+                    </div>
+                </div>
+                <div class="patient-overview">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 1rem; text-align: left;">Patient ID</th>
+                                <th style="padding: 1rem; text-align: left;">Name</th>
+                                <th style="padding: 1rem; text-align: left;">Age</th>
+                                <th style="padding: 1rem; text-align: left;">Room</th>
+                                <th style="padding: 1rem; text-align: left;">Status</th>
+                                <th style="padding: 1rem; text-align: left;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">P001</td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">John Doe</td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">45</td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">201</td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">
+                                    <span class="status-indicator status-normal"></span>Stable
+                                </td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">
+                                    <a href="viewpatient.html?id=P001" class="btn" style="margin-right: 0.5rem;">View</a>
+                                    <button class="btn" onclick="editPatient('P001')">Edit</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">P002</td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">Jane Smith</td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">32</td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">202</td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">
+                                    <span class="status-indicator status-urgent"></span>Critical
+                                </td>
+                                <td style="padding: 1rem; border-top: 1px solid #eee;">
+                                    <a href="viewpatient.html?id=P002" class="btn" style="margin-right: 0.5rem;">View</a>
+                                    <button class="btn" onclick="editPatient('P002')">Edit</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <!-- Messaging Center -->
             <div class="card" style="grid-column: 1 / -1;">
                 <h2>Messaging Center</h2>
@@ -570,6 +630,16 @@
 
         // Initialize messaging system
         initializeContacts();
+
+        function searchPatients() {
+            const searchInput = document.querySelector('.management-actions input').value;
+            if (searchInput.trim() === '') {
+                alert('Please enter a search term');
+                return;
+            }
+            // Add your search logic here
+            console.log('Searching for:', searchInput);
+        }
     </script>
 </body>
 </html>

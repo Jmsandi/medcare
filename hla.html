@@ -55,14 +55,29 @@
                     <i class="fas fa-cube mr-3"></i>
                     Resource Utilization
                 </a>
+
+                <a href="#" data-section="equipment" class="nav-link flex items-center px-4 py-3 hover:bg-blue-700">
+                    <i class="fas fa-tools mr-3"></i>
+                    Equipment & Facility
+                </a>
+
+                <a href="#" data-section="financial" class="nav-link flex items-center px-4 py-3 hover:bg-blue-700">
+                    <i class="fas fa-dollar-sign mr-3"></i>
+                    Financial Overview
+                </a>
+
+                <a href="#" data-section="emergency" class="nav-link flex items-center px-4 py-3 hover:bg-blue-700">
+                    <i class="fas fa-ambulance mr-3"></i>
+                    Emergency Preparedness
+                </a>
             </nav>
         </aside>
 
         <!-- Main Content Area -->
         <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
-            <div class="container mx-auto p-6">
-                <!-- Dashboard Section -->
-                <section id="dashboard" class="mb-6">
+            <div class="container mx-auto px-6 py-8">
+                <!-- Each section needs proper closing tags and hierarchy -->
+                <section id="dashboard" class="section-content">
                     <!-- Dashboard content -->
                     <!-- Header -->
                     <div class="flex items-center justify-between mb-6">
@@ -172,8 +187,7 @@
                     </div>
                 </section>
 
-                <!-- Performance Section -->
-                <section id="performance" class="hidden mb-6">
+                <section id="performance" class="section-content hidden">
                     <!-- Performance content -->
                     <div class="flex-1 overflow-x-hidden overflow-y-auto">
                         <div class="p-6">
@@ -292,12 +306,11 @@
                                 </div>
                             </div>
                         </div>
-                    </main>
+                    </div>
                 </section>
 
                 
-                <!-- Staff Management Section -->
-                <section id="staff" class="hidden mb-6">
+                <section id="staff" class="section-content hidden">
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-6">
                             <h2 class="text-3xl font-bold text-gray-800">Staff Management</h2>
@@ -400,8 +413,7 @@
                     </div>
                 </section>
 
-                <!-- Department Stats Section -->
-                <section id="department" class="hidden mb-6">
+                <section id="department" class="section-content hidden">
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-6">
                             <h2 class="text-3xl font-bold text-gray-800">Department Statistics</h2>
@@ -460,8 +472,7 @@
                 </section>
 
 
-                <!-- Patient Stats Section -->
-                <section id="patient-stats" class="hidden mb-6">
+                <section id="patient-stats" class="section-content hidden">
                     <div class="p-6">
                         <!-- Header -->
                         <div class="flex items-center justify-between mb-6">
@@ -565,8 +576,7 @@
                     </div>
                 </section>
 
-                <!-- Resource Utilization Section -->
-                <section id="resource-util" class="hidden mb-6">
+                <section id="resource-util" class="section-content hidden">
                     <div class="p-6">
                         <div class="flex items-center justify-between mb-6">
                             <div class="flex items-center space-x-4">
@@ -695,386 +705,520 @@
                         </div>
 
                     </section>
-                </div>
-            </main>
-        </div>
 
-        <!-- Mobile Menu -->
-        <div class="p-4 flex justify-between items-center md:hidden">
-            <h1 class="text-2xl font-bold">HLA Dashboard</h1>
-            <button id="mobile-menu-button" class="text-gray-800">
-                <i class="fas fa-bars"></i>
-            </button>
-        </div>
+                <section id="equipment" class="section-content hidden">
+                    <div class="p-6">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6">Equipment & Facility Status</h2>
+                        <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>Report Issue
+                        </button>
+                        <!-- Status Overview Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-lg font-semibold mb-4">Critical Equipment</h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <span>MRI Machines</span>
+                                        <span class="px-2 py-1 rounded-full bg-green-100 text-green-800 text-sm">Operational</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>CT Scanners</span>
+                                        <span class="px-2 py-1 rounded-full bg-yellow-100 text-yellow-800 text-sm">Maintenance</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>Ventilators</span>
+                                        <span class="px-2 py-1 rounded-full bg-green-100 text-green-800 text-sm">Operational</span>
+                                    </div>
+                                </div>
+                            </div>
 
-        <script>
-            // Mobile menu toggle
-            const mobileMenuButton = document.getElementById('mobile-menu-button');
-            const sidebar = document.querySelector('aside');
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-lg font-semibold mb-4">Facility Status</h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <span>HVAC System</span>
+                                        <span class="px-2 py-1 rounded-full bg-green-100 text-green-800 text-sm">Normal</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>Power Backup</span>
+                                        <span class="px-2 py-1 rounded-full bg-green-100 text-green-800 text-sm">Ready</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>Water Supply</span>
+                                        <span class="px-2 py-1 rounded-full bg-green-100 text-green-800 text-sm">Normal</span>
+                                    </div>
+                                </div>
+                            </div>
 
-            mobileMenuButton.addEventListener('click', () => {
-                sidebar.classList.toggle('hidden');
-            });
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-lg font-semibold mb-4">Maintenance Schedule</h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <span>Next 24 Hours</span>
+                                        <span class="font-semibold">3 Tasks</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>This Week</span>
+                                        <span class="font-semibold">12 Tasks</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>Pending Issues</span>
+                                        <span class="font-semibold text-red-500">5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-            // Improved section handling
-            function initializeDashboard() {
-                // Get all sections and nav links
-                const sections = document.querySelectorAll('section');
-                const navLinks = document.querySelectorAll('.nav-link');
+                <section id="financial" class="section-content hidden">
+                    <div class="p-6">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6">Financial Overview</h2>
+                        <div class="flex space-x-4">
+                            <select class="border rounded-lg px-4 py-2">
+                                <option>This Month</option>
+                                <option>Last Quarter</option>
+                                <option>This Year</option>
+                            </select>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-download mr-2"></i>Export Report
+                            </button>
+                        </div>
+                        <!-- Financial Metrics -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-lg font-semibold mb-4">Revenue Overview</h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <span>Total Revenue</span>
+                                        <span class="font-semibold">$2.4M</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>Expenses</span>
+                                        <span class="font-semibold">$1.8M</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>Net Profit</span>
+                                        <span class="font-semibold text-green-500">$600K</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Add more financial metrics as needed -->
+                        </div>
+                    </div>
+                </section>
 
-                // Show section function
-                function showSection(sectionId) {
-                    sections.forEach(section => {
-                        section.classList.add('hidden');
-                    });
-                    const targetSection = document.getElementById(sectionId);
-                    if (targetSection) {
-                        targetSection.classList.remove('hidden');
-                    }
-                }
+                <section id="emergency" class="section-content hidden">
+                    <div class="p-6">
+                        <h2 class="text-3xl font-bold text-gray-800 mb-6">Emergency Preparedness</h2>
+                        <button class="bg-red-500 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>Initiate Emergency Protocol
+                        </button>
+                        <!-- Emergency Resources -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                            <div class="bg-white rounded-lg shadow p-6">
+                                <h3 class="text-lg font-semibold mb-4">Emergency Resources</h3>
+                                <div class="space-y-4">
+                                    <div class="flex justify-between items-center">
+                                        <span>Emergency Beds</span>
+                                        <span class="font-semibold">24/30</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>Disaster Kits</span>
+                                        <span class="font-semibold">45</span>
+                                    </div>
+                                    <div class="flex justify-between items-center">
+                                        <span>Response Teams</span>
+                                        <span class="font-semibold">8 Active</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Add more emergency preparedness metrics as needed -->
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
 
-                // Nav link click handlers
-                navLinks.forEach(link => {
-                    link.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        navLinks.forEach(l => l.classList.remove('bg-blue-900'));
-                        link.classList.add('bg-blue-900');
-                        const sectionId = link.dataset.section;
-                        showSection(sectionId);
-                    });
+    <!-- Mobile Menu -->
+    <div class="p-4 flex justify-between items-center md:hidden">
+        <h1 class="text-2xl font-bold">HLA Dashboard</h1>
+        <button id="mobile-menu-button" class="text-gray-800">
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const sidebar = document.querySelector('aside');
+
+        mobileMenuButton.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+        });
+
+        // Improved section handling
+        function initializeDashboard() {
+            // Get all sections and nav links
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            // Show section function
+            function showSection(sectionId) {
+                sections.forEach(section => {
+                    section.classList.add('hidden');
                 });
-
-                function initializeCharts() {
-                    const chartOptions = {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: {
-                            legend: { 
-                                position: 'bottom',
-                                labels: {
-                                    boxWidth: 12,
-                                    padding: 15
-                                }
-                            }
-                        },
-                        layout: {
-                            padding: {
-                                top: 10,
-                                bottom: 20,
-                                left: 10,
-                                right: 10
-                            }
-                        }
-                    };
-
-                    // Add specific dimensions to each chart type
-                    const lineChartOptions = {
-                        ...chartOptions,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    maxTicksLimit: 5
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        }
-                    };
-
-                    const barChartOptions = {
-                        ...chartOptions,
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    maxTicksLimit: 6
-                                }
-                            },
-                            x: {
-                                grid: {
-                                    display: false
-                                }
-                            }
-                        }
-                    };
-
-                    try {
-                        // Initialize charts with specific options
-                        if (document.getElementById('admissionsChart')) {
-                            const admissionsCtx = document.getElementById('admissionsChart').getContext('2d');
-                            new Chart(admissionsCtx, {
-                                type: 'line',
-                                data: {
-                                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                                    datasets: [{
-                                        label: 'Patient Admissions',
-                                        data: [65, 59, 80, 81, 56, 55],
-                                        borderColor: 'rgb(59, 130, 246)',
-                                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                                        tension: 0.1,
-                                        fill: true
-                                    }]
-                                },
-                                options: lineChartOptions
-                            });
-                        }
-
-                        if (document.getElementById('departmentChart')) {
-                            const deptCtx = document.getElementById('departmentChart').getContext('2d');
-                            new Chart(deptCtx, {
-                                type: 'bar',
-                                data: {
-                                    labels: ['Emergency', 'Surgery', 'Pediatrics', 'Cardiology', 'Neurology'],
-                                    datasets: [{
-                                        label: 'Efficiency Score',
-                                        data: [85, 75, 90, 82, 88],
-                                        backgroundColor: 'rgba(59, 130, 246, 0.8)'
-                                    }]
-                                },
-                                options: barChartOptions
-                            });
-                        }
-
-                        // Performance Trend Chart
-                        if (document.getElementById('performanceTrendChart')) {
-                            const perfCtx = document.getElementById('performanceTrendChart').getContext('2d');
-                            new Chart(perfCtx, {
-                                type: 'line',
-                                data: {
-                                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
-                                    datasets: [{
-                                        label: 'Patient Satisfaction',
-                                        data: [4.2, 4.3, 4.1, 4.4],
-                                        borderColor: 'rgb(34, 197, 94)',
-                                        tension: 0.1
-                                    }, {
-                                        label: 'Wait Time (mins)',
-                                        data: [45, 42, 38, 35],
-                                        borderColor: 'rgb(239, 68, 68)',
-                                        tension: 0.1
-                                    }]
-                                },
-                                options: lineChartOptions
-                            });
-                        }
-
-                        // Department Efficiency Chart
-                        if (document.getElementById('departmentEfficiencyChart')) {
-                            const effCtx = document.getElementById('departmentEfficiencyChart').getContext('2d');
-                            new Chart(effCtx, {
-                                type: 'radar',
-                                data: {
-                                    labels: ['Resource Usage', 'Time Management', 'Staff Performance', 'Patient Care', 'Cost Efficiency'],
-                                    datasets: [{
-                                        label: 'Current Month',
-                                        data: [85, 75, 90, 82, 88],
-                                        borderColor: 'rgb(59, 130, 246)',
-                                        backgroundColor: 'rgba(59, 130, 246, 0.2)'
-                                    }]
-                                },
-                                options: chartOptions
-                            });
-                        }
-
-                        // Populate metrics table
-                        const tableBody = document.querySelector('tbody');
-                        const metricsData = [
-                            ['Patient Wait Time', '45 mins', '50 mins', '-10%', 'Improved'],
-                            ['Bed Occupancy', '85%', '80%', '+6%', 'Stable'],
-                            ['Staff Efficiency', '92%', '88%', '+5%', 'Improved'],
-                            ['Patient Satisfaction', '4.2/5', '4.0/5', '+5%', 'Improved'],
-                            ['Cost per Patient', '$840', '$890', '-6%', 'Improved']
-                        ];
-
-                        metricsData.forEach(([metric, current, previous, change, status]) => {
-                            const row = document.createElement('tr');
-                            row.innerHTML = `
-                                <td class="px-6 py-4 whitespace-nowrap">${metric}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${current}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">${previous}</td>
-                                <td class="px-6 py-4 whitespace-nowrap ${change.includes('+') ? 'text-green-500' : 'text-red-500'}">${change}</td>
-                                <td class="px-6 py-4 whitespace-nowrap">
-                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                    ${status === 'Improved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
-                                        ${status}
-                                    </span>
-                                </td>
-                            `;
-                            tableBody.appendChild(row);
-                        });
-
-                    } catch (error) {
-                        console.error('Error initializing charts:', error);
-                    }
+                const targetSection = document.getElementById(sectionId);
+                if (targetSection) {
+                    targetSection.classList.remove('hidden');
                 }
-
-                // Initialize charts
-                initializeCharts();
-
-                // Add resize handler to maintain chart dimensions
-                window.addEventListener('resize', () => {
-                    const charts = document.querySelectorAll('canvas');
-                    charts.forEach(chart => {
-                        if (chart.chart) {
-                            chart.chart.resize();
-                        }
-                    });
-                });
-
-                // Show default section
-                showSection('dashboard');
             }
 
-            // Initialize when DOM is loaded
-            document.addEventListener('DOMContentLoaded', initializeDashboard);
+            // Nav link click handlers
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    navLinks.forEach(l => l.classList.remove('bg-blue-900'));
+                    link.classList.add('bg-blue-900');
+                    const sectionId = link.dataset.section;
+                    showSection(sectionId);
+                });
+            });
 
-            // Staff Data
+            function initializeCharts() {
+                const chartOptions = {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 15
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            top: 10,
+                            bottom: 20,
+                            left: 10,
+                            right: 10
+                        }
+                    }
+                };
+
+                // Add specific dimensions to each chart type
+                const lineChartOptions = {
+                    ...chartOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                maxTicksLimit: 5
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                };
+
+                const barChartOptions = {
+                    ...chartOptions,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                maxTicksLimit: 6
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                };
+
+                try {
+                    // Initialize charts with specific options
+                    if (document.getElementById('admissionsChart')) {
+                        const admissionsCtx = document.getElementById('admissionsChart').getContext('2d');
+                        new Chart(admissionsCtx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                                datasets: [{
+                                    label: 'Patient Admissions',
+                                    data: [65, 59, 80, 81, 56, 55],
+                                    borderColor: 'rgb(59, 130, 246)',
+                                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                                    tension: 0.1,
+                                    fill: true
+                                }]
+                            },
+                            options: lineChartOptions
+                        });
+                    }
+
+                    if (document.getElementById('departmentChart')) {
+                        const deptCtx = document.getElementById('departmentChart').getContext('2d');
+                        new Chart(deptCtx, {
+                            type: 'bar',
+                            data: {
+                                labels: ['Emergency', 'Surgery', 'Pediatrics', 'Cardiology', 'Neurology'],
+                                datasets: [{
+                                    label: 'Efficiency Score',
+                                    data: [85, 75, 90, 82, 88],
+                                    backgroundColor: 'rgba(59, 130, 246, 0.8)'
+                                }]
+                            },
+                            options: barChartOptions
+                        });
+                    }
+
+                    // Performance Trend Chart
+                    if (document.getElementById('performanceTrendChart')) {
+                        const perfCtx = document.getElementById('performanceTrendChart').getContext('2d');
+                        new Chart(perfCtx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                                datasets: [{
+                                    label: 'Patient Satisfaction',
+                                    data: [4.2, 4.3, 4.1, 4.4],
+                                    borderColor: 'rgb(34, 197, 94)',
+                                    tension: 0.1
+                                }, {
+                                    label: 'Wait Time (mins)',
+                                    data: [45, 42, 38, 35],
+                                    borderColor: 'rgb(239, 68, 68)',
+                                    tension: 0.1
+                                }]
+                            },
+                            options: lineChartOptions
+                        });
+                    }
+
+                    // Department Efficiency Chart
+                    if (document.getElementById('departmentEfficiencyChart')) {
+                        const effCtx = document.getElementById('departmentEfficiencyChart').getContext('2d');
+                        new Chart(effCtx, {
+                            type: 'radar',
+                            data: {
+                                labels: ['Resource Usage', 'Time Management', 'Staff Performance', 'Patient Care', 'Cost Efficiency'],
+                                datasets: [{
+                                    label: 'Current Month',
+                                    data: [85, 75, 90, 82, 88],
+                                    borderColor: 'rgb(59, 130, 246)',
+                                    backgroundColor: 'rgba(59, 130, 246, 0.2)'
+                                }]
+                            },
+                            options: chartOptions
+                        });
+                    }
+
+                    // Populate metrics table
+                    const tableBody = document.querySelector('tbody');
+                    const metricsData = [
+                        ['Patient Wait Time', '45 mins', '50 mins', '-10%', 'Improved'],
+                        ['Bed Occupancy', '85%', '80%', '+6%', 'Stable'],
+                        ['Staff Efficiency', '92%', '88%', '+5%', 'Improved'],
+                        ['Patient Satisfaction', '4.2/5', '4.0/5', '+5%', 'Improved'],
+                        ['Cost per Patient', '$840', '$890', '-6%', 'Improved']
+                    ];
+
+                    metricsData.forEach(([metric, current, previous, change, status]) => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="px-6 py-4 whitespace-nowrap">${metric}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${current}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">${previous}</td>
+                            <td class="px-6 py-4 whitespace-nowrap ${change.includes('+') ? 'text-green-500' : 'text-red-500'}">${change}</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                                ${status === 'Improved' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                    ${status}
+                                </span>
+                            </td>
+                        `;
+                        tableBody.appendChild(row);
+                    });
+
+                } catch (error) {
+                    console.error('Error initializing charts:', error);
+                }
+            }
+
+            // Initialize charts
+            initializeCharts();
+
+            // Add resize handler to maintain chart dimensions
+            window.addEventListener('resize', () => {
+                const charts = document.querySelectorAll('canvas');
+                charts.forEach(chart => {
+                    if (chart.chart) {
+                        chart.chart.resize();
+                    }
+                });
+            });
+
+            // Show default section
+            showSection('dashboard');
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeDashboard);
+
+        // Staff Data
 const staffData = [
-    { name: 'Dr. John Smith', role: 'Senior Doctor', department: 'Emergency', status: 'Active' },
-    { name: 'Nurse Sarah Johnson', role: 'Head Nurse', department: 'Surgery', status: 'On Leave' },
-    { name: 'Dr. Emily Brown', role: 'Specialist', department: 'Pediatrics', status: 'Active' },
-    // Add more staff data as needed
+{ name: 'Dr. John Smith', role: 'Senior Doctor', department: 'Emergency', status: 'Active' },
+{ name: 'Nurse Sarah Johnson', role: 'Head Nurse', department: 'Surgery', status: 'On Leave' },
+{ name: 'Dr. Emily Brown', role: 'Specialist', department: 'Pediatrics', status: 'Active' },
+// Add more staff data as needed
 ];
 
 // Populate Staff Table
 function populateStaffTable() {
-    const tableBody = document.getElementById('staffTableBody');
-    if (!tableBody) return;
+const tableBody = document.getElementById('staffTableBody');
+if (!tableBody) return;
 
-    tableBody.innerHTML = '';
-    staffData.forEach(staff => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 h-10 w-10">
-                        <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
-                            <i class="fas fa-user text-gray-500"></i>
-                        </div>
-                    </div>
-                    <div class="ml-4">
-                        <div class="text-sm font-medium text-gray-900">${staff.name}</div>
+tableBody.innerHTML = '';
+staffData.forEach(staff => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td class="px-6 py-4 whitespace-nowrap">
+            <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                    <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                        <i class="fas fa-user text-gray-500"></i>
                     </div>
                 </div>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${staff.role}</td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${staff.department}</td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    staff.status === 'Active' ? 'bg-green-100 text-green-800' : 
-                    'bg-yellow-100 text-yellow-800'}">${staff.status}</span>
-            </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <button class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
-                <button class="text-red-600 hover:text-red-900">Delete</button>
-            </td>
-        `;
-        tableBody.appendChild(row);
-    });
+                <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">${staff.name}</div>
+                </div>
+            </div>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${staff.role}</td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${staff.department}</td>
+        <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                staff.status === 'Active' ? 'bg-green-100 text-green-800' : 
+                'bg-yellow-100 text-yellow-800'}">${staff.status}</span>
+        </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <button class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+            <button class="text-red-600 hover:text-red-900">Delete</button>
+        </td>
+    `;
+    tableBody.appendChild(row);
+});
 }
 
 // Initialize Department Charts
 function initializeDepartmentCharts() {
-    // Resource Utilization Chart
-    const resourceCtx = document.getElementById('resourceUtilizationChart')?.getContext('2d');
-    if (resourceCtx) {
-        new Chart(resourceCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Emergency', 'Surgery', 'Pediatrics', 'Cardiology', 'Neurology'],
-                datasets: [{
-                    label: 'Resource Usage (%)',
-                    data: [85, 65, 75, 80, 70],
-                    backgroundColor: 'rgba(59, 130, 246, 0.5)'
-                }]
+// Resource Utilization Chart
+const resourceCtx = document.getElementById('resourceUtilizationChart')?.getContext('2d');
+if (resourceCtx) {
+    new Chart(resourceCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Emergency', 'Surgery', 'Pediatrics', 'Cardiology', 'Neurology'],
+            datasets: [{
+                label: 'Resource Usage (%)',
+                data: [85, 65, 75, 80, 70],
+                backgroundColor: 'rgba(59, 130, 246, 0.5)'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
             },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 100
-                    }
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100
                 }
             }
-        });
-    }
+        }
+    });
+}
 
-    // Patient Flow Chart
-    const flowCtx = document.getElementById('patientFlowChart')?.getContext('2d');
-    if (flowCtx) {
-        new Chart(flowCtx, {
-            type: 'line',
-            data: {
-                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                datasets: [{
-                    label: 'Inpatient',
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    borderColor: 'rgb(59, 130, 246)',
-                    tension: 0.1
-                }, {
-                    label: 'Outpatient',
-                    data: [28, 48, 40, 19, 86, 27, 90],
-                    borderColor: 'rgb(34, 197, 94)',
-                    tension: 0.1
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom'
-                    }
+// Patient Flow Chart
+const flowCtx = document.getElementById('patientFlowChart')?.getContext('2d');
+if (flowCtx) {
+    new Chart(flowCtx, {
+        type: 'line',
+        data: {
+            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            datasets: [{
+                label: 'Inpatient',
+                data: [65, 59, 80, 81, 56, 55, 40],
+                borderColor: 'rgb(59, 130, 246)',
+                tension: 0.1
+            }, {
+                label: 'Outpatient',
+                data: [28, 48, 40, 19, 86, 27, 90],
+                borderColor: 'rgb(34, 197, 94)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
                 }
             }
-        });
-    }
+        }
+    });
+}
 }
 
 // Initialize when content is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    populateStaffTable();
-    initializeDepartmentCharts();
+populateStaffTable();
+initializeDepartmentCharts();
 });
 
 document.addEventListener('DOMContentLoaded', () => {
-    const sections = document.querySelectorAll('section');
-    const navLinks = document.querySelectorAll('.nav-link');
+const sections = document.querySelectorAll('section');
+const navLinks = document.querySelectorAll('.nav-link');
 
-    function showSection(sectionId) {
-        console.log('Showing section:', sectionId); // Debug log
-        sections.forEach(section => {
-            section.classList.add('hidden');
-        });
-        const targetSection = document.getElementById(sectionId);
-        if (targetSection) {
-            targetSection.classList.remove('hidden');
-        }
-    }
-
-    navLinks.forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const sectionId = link.dataset.section;
-            navLinks.forEach(l => l.classList.remove('bg-blue-900'));
-            link.classList.add('bg-blue-900');
-            showSection(sectionId);
-        });
+function showSection(sectionId) {
+    console.log('Showing section:', sectionId); // Debug log
+    sections.forEach(section => {
+        section.classList.add('hidden');
     });
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.remove('hidden');
+    }
+}
 
-    // Show dashboard by default
-    showSection('dashboard');
+navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const sectionId = link.dataset.section;
+        navLinks.forEach(l => l.classList.remove('bg-blue-900'));
+        link.classList.add('bg-blue-900');
+        showSection(sectionId);
+    });
+});
+
+// Show dashboard by default
+showSection('dashboard');
 });
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -1153,6 +1297,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 tr.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${dept.name}</td>
+// Equipment Status Charts
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${dept.patients}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${dept.occupancy}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${dept.avgStay}</td>

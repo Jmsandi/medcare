@@ -468,6 +468,7 @@
                 <li class="nav-item" data-section="treatments">Treatments</li>
                 <li class="nav-item" data-section="reports">Reports</li>
                 <li class="nav-item" data-section="messages">Messages</li>
+                <li class="nav-item" data-section="patientmanagement">Patient Management</li>
             </ul>
         </aside>
 
@@ -861,6 +862,52 @@
                 </div>
             </div>
         </section>
+
+        <!-- Patient Management Section -->
+        <section id="patientmanagement" class="section">
+            <div class="header">
+                <h1>Patient Management</h1>
+                <button onclick="window.location.href='patientregistration.html'">Add New Patient</button>
+            </div>
+
+            <div class="card">
+                <div class="search-bar">
+                    <input type="text" placeholder="Search patients..." id="patientSearch">
+                    <button>Search</button>
+                </div>
+
+                <div class="filters">
+                    <select id="statusFilter">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                    <select id="sortFilter">
+                        <option value="name">Sort by Name</option>
+                        <option value="id">Sort by ID</option>
+                        <option value="date">Sort by Last Visit</option>
+                    </select>
+                </div>
+
+                <table id="patientManagementTable">
+                    <thead>
+                        <tr>
+                            <th>Patient ID</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Phone</th>
+                            <th>Last Visit</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Patient data will be dynamically loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 </div>
 
@@ -871,6 +918,8 @@
             loadDashboard();
             loadData();
             setupNavigation();
+            loadPatientManagementTable();
+            showSection('dashboard');
         });
 
         function loadDashboard() {
@@ -907,8 +956,24 @@
         ];
 
         const samplePatients = [
-            { name: 'John Doe', id: 'P001', age: 45, contact: '555-0123', lastVisit: '2024-12-10' },
-            { name: 'Jane Smith', id: 'P002', age: 32, contact: '555-0124', lastVisit: '2024-12-12' }
+            { 
+                id: 'P001', 
+                name: 'Jane Smith', 
+                age: 45, 
+                gender: 'Female',
+                phone: '555-0123',
+                lastVisit: '2024-12-10',
+                status: 'Active'
+            },
+            { 
+                id: 'P002', 
+                name: 'John doe', 
+                age: 45, 
+                gender: 'Male',
+                phone: '555-0124',
+                lastVisit: '2024-12-12',
+                status: 'Active'
+            }
         ];
 
         const sampleOrders = [
@@ -1718,6 +1783,179 @@
             setupNavigation();
             showSection('dashboard');
         });
-    </script>
+
+    // Add to your existing samplePatients data or modify as needed
+    const extendedSamplePatients = [
+        { 
+            id: 'P001', 
+            name: 'John Doe', 
+            age: 45, 
+            gender: 'Male',
+            phone: '555-0123',
+            lastVisit: '2024-12-10',
+            status: 'Active'
+        },
+        { 
+            id: 'P002', 
+            name: 'Jane Smith', 
+            age: 32, 
+            gender: 'Female',
+            phone: '555-0124',
+            lastVisit: '2024-12-12',
+            status: 'Active'
+        }
+    ];
+
+    function showAddPatientForm() {
+        const formHTML = `
+            <div class="modal" id="addPatientModal">
+                <div class="card">
+                    <h2>Add New Patient</h2>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="patientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="patientAge" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="patientGender">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="patientPhone" required>
+                    </div>
+                    <div class="button-group">
+                        <button onclick="saveNewPatient()">Save</button>
+                        <button onclick="closeAddPatientForm()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', formHTML);
+    }
+
+    function closeAddPatientForm() {
+        const modal = document.getElementById('addPatientModal');
+        if (modal) modal.remove();
+    }
+
+    function saveNewPatient() {
+        // Implement patient saving logic here
+        alert('Patient saved successfully!');
+        closeAddPatientForm();
+        loadPatientManagementTable();
+    }
+
+    function loadPatientManagementTable() {
+        const tbody = document.querySelector('#patientManagementTable tbody');
+        tbody.innerHTML = extendedSamplePatients.map(patient => `
+            <tr>
+                <td>${patient.id}</td>
+                <td>${patient.name}</td>
+                <td>${patient.age}</td>
+                <td>${patient.gender}</td>
+                <td>${patient.phone}</td>
+                <td>${patient.lastVisit}</td>
+                <td><span class="status-pill status-${patient.status.toLowerCase()}">${patient.status}</span></td>
+                <td>
+                    <button onclick="viewPatientDetails('${patient.id}')">View</button>
+                    <button onclick="editPatientDetails('${patient.id}')">Edit</button>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    // Add this to your existing initialization code
+    document.addEventListener('DOMContentLoaded', () => {
+        // ... existing initialization code ...
+        loadPatientManagementTable();
+    });
+
+    function viewPatientDetails(patientId) {
+        const patient = samplePatients.find(p => p.id === patientId);
+        if (!patient) return;
+        
+        const detailsHTML = `
+            <div class="modal" id="patientDetailsModal">
+                <div class="card">
+                    <h2>Patient Details</h2>
+                    <div class="details-grid">
+                        <div><strong>ID:</strong> ${patient.id}</div>
+                        <div><strong>Name:</strong> ${patient.name}</div>
+                        <div><strong>Age:</strong> ${patient.age}</div>
+                        <div><strong>Gender:</strong> ${patient.gender}</div>
+                        <div><strong>Phone:</strong> ${patient.phone}</div>
+                        <div><strong>Last Visit:</strong> ${patient.lastVisit}</div>
+                        <div><strong>Status:</strong> ${patient.status}</div>
+                    </div>
+                    <button onclick="closePatientDetails()">Close</button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', detailsHTML);
+    }
+
+    function closePatientDetails() {
+        const modal = document.getElementById('patientDetailsModal');
+        if (modal) modal.remove();
+    }
+
+    function editPatientDetails(patientId) {
+        const patient = samplePatients.find(p => p.id === patientId);
+        if (!patient) return;
+        
+        const formHTML = `
+            <div class="modal" id="editPatientModal">
+                <div class="card">
+                    <h2>Edit Patient</h2>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="editPatientName" value="${patient.name}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Age</label>
+                        <input type="number" id="editPatientAge" value="${patient.age}" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Gender</label>
+                        <select id="editPatientGender">
+                            <option value="Male" ${patient.gender === 'Male' ? 'selected' : ''}>Male</option>
+                            <option value="Female" ${patient.gender === 'Female' ? 'selected' : ''}>Female</option>
+                            <option value="Other" ${patient.gender === 'Other' ? 'selected' : ''}>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="editPatientPhone" value="${patient.phone}" required>
+                    </div>
+                    <div class="button-group">
+                        <button onclick="updatePatient('${patient.id}')">Save Changes</button>
+                        <button onclick="closeEditPatientForm()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', formHTML);
+    }
+
+    function closeEditPatientForm() {
+        const modal = document.getElementById('editPatientModal');
+        if (modal) modal.remove();
+    }
+
+    function updatePatient(patientId) {
+        // Implement patient update logic here
+        alert('Patient updated successfully!');
+        closeEditPatientForm();
+        loadPatientManagementTable();
+    }
+</script>
 </body>
 </html>

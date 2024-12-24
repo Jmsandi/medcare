@@ -355,6 +355,38 @@
         #contacts {
             width: 100%;
         }
+
+        /* Patient Management Styles */
+        .patient-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .patient-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .patient-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .patient-status {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .status-stable { background: #2ecc71; color: white; }
+        .status-critical { background: #e74c3c; color: white; }
+        .status-observation { background: #f1c40f; color: black; }
     </style>
 </head>
 <body>
@@ -369,6 +401,62 @@
         </div>
 
         <div class="grid">
+            <!-- Add this new card before existing cards -->
+            <div class="card">
+                <h2>Patient Management</h2>
+                
+                <!-- New top section for search and buttons -->
+                <div class="patient-actions" style="margin-bottom: 1rem; display: flex; gap: 1rem; align-items: center;">
+                    <div style="flex: 1; display: flex; gap: 0.5rem;">
+                        <input type="text" class="message-input" placeholder="Search patient by name or ID...">
+                        <button class="btn" onclick="searchPatientInRegistry()">Search</button>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="viewpatient.html" class="btn" style="background-color: #2ecc71; text-decoration: none;">View Patient</a>
+                        <a href="patientregistration.html" class="btn" style="background-color: #3498db; text-decoration: none;">Register New Patient</a>
+                    </div>
+                </div>
+
+                <!-- Search results container -->
+                <div id="patientRegistryResults" style="display: none; margin-bottom: 1rem;"></div>
+
+                <!-- Existing patient grid -->
+                <div class="patient-grid">
+                    <div class="patient-card">
+                        <div class="patient-info">
+                            <h3>John Doe</h3>
+                            <span class="patient-status status-stable">Stable</span>
+                        </div>
+                        <p><strong>Room:</strong> 201</p>
+                        <p><strong>Admission:</strong> 2024-01-10</p>
+                        <p><strong>Diagnosis:</strong> Post-surgery recovery</p>
+                        <button class="btn" onclick="viewPatientDetails('201')">View Details</button>
+                    </div>
+
+                    <div class="patient-card">
+                        <div class="patient-info">
+                            <h3>Jane Smith</h3>
+                            <span class="patient-status status-observation">Under Observation</span>
+                        </div>
+                        <p><strong>Room:</strong> 202</p>
+                        <p><strong>Admission:</strong> 2024-01-12</p>
+                        <p><strong>Diagnosis:</strong> Respiratory issues</p>
+                        <button class="btn" onclick="viewPatientDetails('202')">View Details</button>
+                    </div>
+
+                    <div class="patient-card">
+                        <div class="patient-info">
+                            <h3>Robert Johnson</h3>
+                            <span class="patient-status status-critical">Critical</span>
+                        </div>
+                        <p><strong>Room:</strong> 203</p>
+                        <p><strong>Admission:</strong> 2024-01-15</p>
+                        <p><strong>Diagnosis:</strong> Cardiac condition</p>
+                        <button class="btn" onclick="viewPatientDetails('203')">View Details</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Messaging System Card -->
             <div class="messaging-card">
                 <h2>Messaging System</h2>
@@ -832,6 +920,38 @@
                 }
             }
         });
+
+        function viewPatientDetails(roomNumber) {
+            // Simulate opening patient details
+            showNotification(`Opening details for patient in Room ${roomNumber}`);
+        }
+
+        function searchPatientInRegistry() {
+            const searchInput = document.querySelector('.patient-actions input').value;
+            const resultsDiv = document.getElementById('patientRegistryResults');
+            
+            if (searchInput.trim() === '') {
+                alert('Please enter a search term');
+                return;
+            }
+
+            // Simulate search results
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <div style="border: 1px solid #eee; padding: 1rem; border-radius: 4px;">
+                    <h3>Search Results</h3>
+                    <div style="margin-top: 0.5rem;">
+                        <div style="padding: 0.5rem; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <strong>John Doe</strong> (ID: P12345)
+                                <div style="color: #7f8c8d;">Room 201</div>
+                            </div>
+                            <button class="btn" onclick="window.location.href='view-patient.html?id=P12345'">View</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>

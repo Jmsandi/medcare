@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="""en"></html>
+<head>
+    <meta charset="""UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Primary Healthcare Unit Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+            height: 300px;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="bg-green-800 text-white w-64 flex-shrink-0 hidden md:block">
+            <div class="p-4">
+                <h1 class="text-2xl font-bold">PHU Dashboard</h1>
+            </div>
+            <nav class="mt-4">
+                <a href="#" data-section="dashboard" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-chart-line mr-3"></i>
+                    Dashboard
+                </a>
+                <a href="#" data-section="patient-registration" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-user-plus mr-3"></i>
+                    Patient Registration
+                </a>
+                <a href="#" data-section="appointments" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-calendar-alt mr-3"></i>
+                    Appointments
+                </a>
+                <a href="#" data-section="medical-records" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-notes-medical mr-3"></i>
+                    Medical Records
+                </a>
+                <a href="#" data-section="vaccinations" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-syringe mr-3"></i>
+                    Vaccinations
+                </a>
+                <a href="#" data-section="medications" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-pills mr-3"></i>
+                    Medications
+                </a>
+                <a href="#" data-section="staff" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-users mr-3"></i>
+                    Staff Management
+                </a>
+                <a href="#" data-section="emergency" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-ambulance mr-3"></i>
+                    Emergency Response
+                </a>
+                <a href="#" data-section="community" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-chart-bar mr-3"></i>
+                    Community Health
+                </a>
+                <a href="#" data-section="referrals" class="nav-link flex items-center px-4 py-3 hover:bg-green-700">
+                    <i class="fas fa-hospital mr-3"></i>
+                    Referrals
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100">
+            <div class="container mx-auto px-6 py-8">
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="section-content">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">PHU Overview</h2>
+                        <div class="flex space-x-4">
+                            <div class="relative">
+                                <select class="bg-white border rounded-lg px-4 py-2">
+                                    <option>Today</option>
+                                    <option>This Week</option>
+                                    <option>This Month</option>
+                                </select>
+                            </div>
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-sync-alt mr-2"></i>Sync Data
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-green-100 rounded-full">
+                                    <i class="fas fa-user-plus text-green-500 text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm">Today's Patients</h3>
+                                    <p class="text-2xl font-semibold" data-stat="today-patients">24</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Add more stat cards -->
+                    </div>
+
+                    <!-- Enhanced Quick Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                        <!-- Existing stat card -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-green-100 rounded-full">
+                                    <i class="fas fa-user-plus text-green-500 text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm">Today's Patients</h3>
+                                    <p class="text-2xl font-semibold" data-stat="today-patients">24</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- New stat cards -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-blue-100 rounded-full">
+                                    <i class="fas fa-procedures text-blue-500 text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm">Active Cases</h3>
+                                    <p class="text-2xl font-semibold" data-stat="active-cases">156</p>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-yellow-100 rounded-full">
+                                    <i class="fas fa-syringe text-yellow-500 text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm">Vaccinations Today</h3>
+                                    <p class="text-2xl font-semibold" data-stat="vaccinations">45</p>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <div class="flex items-center">
+                                <div class="p-3 bg-purple-100 rounded-full">
+                                    <i class="fas fa-user-md text-purple-500 text-xl"></i>
+                                </div>
+                                <div class="ml-4">
+                                    <h3 class="text-gray-500 text-sm">Staff On Duty</h3>
+                                    <p class="text-2xl font-semibold" data-stat="staff-on-duty">12</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Charts Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                        <!-- Existing Patient Visit Trends chart -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold mb-4">Patient Visit Trends</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="visitTrendsChart"></canvas>
+                            </div>
+                        </div>
+                    
+                        <!-- New Department Load Distribution chart -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold mb-4">Department Load Distribution</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="departmentLoadChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Analytics Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                        <!-- Resource Utilization -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold mb-4">Resource Utilization</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="resourceUtilizationChart"></canvas>
+                            </div>
+                        </div>
+                    
+                        <!-- Patient Demographics -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold mb-4">Patient Demographics</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="demographicsChart"></canvas>
+                            </div>
+                        </div>
+                    
+                        <!-- Key Performance Metrics -->
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold mb-4">Performance Metrics</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm text-gray-600">Average Wait Time</span>
+                                        <span class="text-sm font-medium text-green-600">15 mins</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 75%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm text-gray-600">Patient Satisfaction</span>
+                                        <span class="text-sm font-medium text-blue-600">92%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-blue-500 h-2 rounded-full" style="width: 92%"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span class="text-sm text-gray-600">Resource Efficiency</span>
+                                        <span class="text-sm font-medium text-purple-600">88%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-purple-500 h-2 rounded-full" style="width: 88%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Patient Registration Section -->
+                <section id="patient-registration" class="section-content hidden">
+    <div class="flex items-center justify-between mb-6">
+        <h2 class="text-3xl font-bold text-gray-800">Patient Management</h2>
+        <a href="patientregistration.html" class="bg-green-500 text-white px-4 py-2 rounded-lg">
+            <i class="fas fa-plus mr-2"></i>New Registration
+        </a>
+    </div>
+
+    <!-- Patient List -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold">Registered Patients</h3>
+            <div class="flex space-x-4">
+                <input type="text" 
+                    placeholder="Search patients..." 
+                    class="border rounded-lg px-4 py-2" 
+                    id="patientSearch">
+                <select class="border rounded-lg px-4 py-2">
+                    <option value="">All Categories</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="critical">Critical</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Age</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Contact</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Last Visit</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <tr>
+                        <td class="px-6 py-4">P001</td>
+                        <td class="px-6 py-4">John Doe</td>
+                        <td class="px-6 py-4">45</td>
+                        <td class="px-6 py-4">+1234567890</td>
+                        <td class="px-6 py-4">2024-03-15</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 rounded-full text-xs bg-green-100 text-green-800">Active</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="flex space-x-2">
+                                <button class="text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-green-600 hover:text-green-800">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Add more patient rows as needed -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex items-center justify-between mt-4">
+            <div class="text-sm text-gray-700">
+                Showing <span class="font-medium">1</span> to <span class="font-medium">10</span> of <span class="font-medium">50</span> results
+            </div>
+            <div class="flex space-x-2">
+                <button class="px-3 py-1 border rounded text-sm">Previous</button>
+                <button class="px-3 py-1 border rounded bg-green-500 text-white">1</button>
+                <button class="px-3 py-1 border rounded text-sm">2</button>
+                <button class="px-3 py-1 border rounded text-sm">3</button>
+                <button class="px-3 py-1 border rounded text-sm">Next</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+                <!-- Appointments Section -->
+                <section id="appointments" class="section-content hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Appointments</h2>
+                        <div class="flex space-x-4">
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-plus mr-2"></i>New Appointment
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Calendar View -->
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Appointment Calendar</h3>
+                            <div class="flex space-x-2">
+                                <button class="px-3 py-1 bg-green-100 text-green-800 rounded">Day</button>
+                                <button class="px-3 py-1 bg-gray-100 text-gray-800 rounded">Week</button>
+                                <button class="px-3 py-1 bg-gray-100 text-gray-800 rounded">Month</button>
+                            </div>
+                        </div>
+                        <!-- Calendar will be implemented with JavaScript -->
+                        <div id="appointmentCalendar" class="min-h-[400px]"></div>
+                    </div>
+
+                    <!-- Upcoming Appointments -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold mb-4">Today's Appointments</h3>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200" id="appointmentsList">
+                                    <!-- Will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Medical Records Section -->
+                <section id="medical-records" class="section-content hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Medical Records</h2>
+                        <div class="flex space-x-4">
+                            <input type="text" placeholder="Search records..." class="border rounded-lg px-4 py-2">
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+                                <i class="fas fa-search mr-2"></i>Search
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Recent Records -->
+                    <div class="bg-white rounded-lg shadow p-6 mb-6">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Diagnosis</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Treatment</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Doctor</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4">2024-03-15</td>
+                                        <td class="px-6 py-4">P001</td>
+                                        <td class="px-6 py-4">Hypertension</td>
+                                        <td class="px-6 py-4">Medication prescribed</td>
+                                        <td class="px-6 py-4">Dr. Smith</td>
+                                        <td class="px-6 py-4">
+                                            <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="text-green-600 hover:text-green-800">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vaccinations Section -->
+                <section id="vaccinations" class="section-content hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Vaccination Management</h2>
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>New Vaccination Record
+                        </button>
+                    </div>
+
+                    <!-- Vaccination Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Today's Vaccinations</h3>
+                            <div class="text-3xl font-bold text-green-600 mb-2">45</div>
+                            <p class="text-gray-500">Scheduled: 52</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Vaccine Stock</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between mb-1">
+                                        <span>BCG</span>
+                                        <span class="text-green-500">85%</span>
+                                    </div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2">
+                                        <div class="bg-green-500 h-2 rounded-full" style="width: 85%"></div>
+                                    </div>
+                                </div>
+                                <!-- Add more vaccine stocks -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Medications Section -->
+                <section id="medications" class="section-content hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Medications Management</h2>
+                        <div class="flex space-x-4">
+                            <button class="bg-green-500 text-white px-4 py-2 rounded-lg" onclick="showAddMedicationModal()">
+                                <i class="fas fa-plus mr-2"></i>Add Medication
+                            </button>
+                            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg" onclick="updateInventory()">
+                                <i class="fas fa-sync mr-2"></i>Update Inventory
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Medication Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Low Stock Alert</h3>
+                            <div class="text-3xl font-bold text-red-600 mb-2" id="lowStockCount">0</div>
+                            <p class="text-gray-500">Items below threshold</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Total Inventory Value</h3>
+                            <div class="text-3xl font-bold text-green-600 mb-2" id="inventoryValue">$0</div>
+                            <p class="text-gray-500">Updated daily</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Expiring Soon</h3>
+                            <div class="text-3xl font-bold text-yellow-600 mb-2" id="expiringCount">0</div>
+                            <p class="text-gray-500">Within 30 days</p>
+                        </div>
+                    </div>
+
+                    <!-- Medication Inventory Table -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Current Inventory</h3>
+                            <input type="text" placeholder="Search medications..." 
+                                class="border rounded-lg px-4 py-2" 
+                                id="medicationSearch">
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Unit</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="medicationsList">
+                                    <!-- Will be populated by renderMedicationsList() -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Staff Management Section -->
+                <section id="staff" class="section-content hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Staff Management</h2>
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg" onclick="showAddStaffModal()">
+                            <i class="fas fa-user-plus mr-2"></i>Add Staff Member
+                        </button>
+                    </div>
+
+                    <!-- Staff Overview -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Total Staff</h3>
+                            <div class="text-3xl font-bold text-blue-600 mb-2">0</div>
+                            <p class="text-gray-500">Active members</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">On Duty</h3>
+                            <div class="text-3xl font-bold text-green-600 mb-2">0</div>
+                            <p class="text-gray-500">Current shift</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Off Duty</h3>
+                            <div class="text-3xl font-bold text-red-600 mb-2">0</div>
+                            <p class="text-gray-500">Not available</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">On Leave</h3>
+                            <div class="text-3xl font-bold text-yellow-600 mb-2">0</div>
+                            <p class="text-gray-500">Scheduled absence</p>
+                        </div>
+                    </div>
+
+                    <!-- Staff Directory -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Staff Directory</h3>
+                            <input type="text" placeholder="Search staff..." 
+                                class="border rounded-lg px-4 py-2" 
+                                id="staffSearch">
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="staffList">
+                                    <!-- Will be populated by renderStaffList() -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Emergency Response Section -->
+                <section id="emergency" class="section-content hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Emergency Response</h2>
+                        <button class="bg-red-500 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>Trigger Emergency
+                        </button>
+                    </div>
+                    <!-- Will be populated by initializeEmergencyResponse() from phu.js -->
+                </section>
+
+                <!-- Community Health Section -->
+                <section id="community" class="section-content hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Community Health</h2>
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg" onclick="addHealthReport()">
+                            <i class="fas fa-plus mr-2"></i>New Health Report
+                        </button>
+                    </div>
+
+                    <!-- Disease Surveillance -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold mb-4">Disease Surveillance</h3>
+                            <div id="diseaseSurveillance" class="space-y-4">
+                                <!-- Will be populated by initializeCommunityHealth() -->
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold mb-4">Community Activities</h3>
+                            <div class="space-y-4" id="communityActivities">
+                                <!-- Will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Metrics Chart -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-xl font-semibold mb-4">Community Health Trends</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="communityHealthChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Health Indicators -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Vaccination Coverage</h3>
+                            <div class="text-3xl font-bold text-green-600 mb-2">78%</div>
+                            <p class="text-gray-500">Population vaccinated</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Health Index</h3>
+                            <div class="text-3xl font-bold text-blue-600 mb-2">85/100</div>
+                            <p class="text-gray-500">Community wellness score</p>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-lg font-semibold mb-4">Active Programs</h3>
+                            <div class="text-3xl font-bold text-purple-600 mb-2">5</div>
+                            <p class="text-gray-500">Ongoing health initiatives</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold mb-4">Disease Distribution</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="diseaseDistributionChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-xl font-semibold mb-4">Health Trends</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="healthTrendsChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Referrals Section -->
+                <section id="referrals" class="section-content hidden">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-gray-800">Referrals Management</h2>
+                        <button class="bg-green-500 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-plus mr-2"></i>New Referral
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Referring Doctor</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Specialist</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4">2024-03-15</td>
+                                        <td class="px-6 py-4">John Doe</td>
+                                        <td class="px-6 py-4">Dr. Smith</td>
+                                        <td class="px-6 py-4">Dr. Johnson (Cardiologist)</td>
+                                        <td class="px-6 py-4">
+                                            <span class="px-2 py-1 rounded-full text-xs bg-yellow-100 text-yellow-800">Pending</span>
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            <button class="text-blue-600 hover:text-blue-800 mr-2">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="text-red-600 hover:text-red-800">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+  
+    <script src="phu.js"></script>
+</body>
+</html>
